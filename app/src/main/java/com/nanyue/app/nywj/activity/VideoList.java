@@ -102,7 +102,7 @@ public class VideoList extends AppCompatActivity implements View.OnClickListener
                 try {
                     OkHttpClient okHttpClient = new OkHttpClient();
                     Request request = new Request.Builder()
-                            .url("http://nouse.gzkuaiyi.com:9999/app/list-9")
+                            .url("http://nouse.gzkuaiyi.com:9999/app/list-7")
                             .build();
                     Response response = okHttpClient.newCall(request).execute();
                     String res = response.body().string();
