@@ -43,7 +43,7 @@ dependencies {
     compile 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.3'
     compile 'com.squareup.okhttp3:okhttp:3.9.1'
     compile 'com.alibaba:fastjson:1.2.41'
-    compile 'com.alibaba:fastjson:1.2.41.android'
+    compile 'com.alibaba:fastjson:1.1.67.android'
     compile 'cn.jzvd:jiaozivideoplayer:6.2.2'
     compile 'org.jsoup:jsoup:1.11.2'
     testCompile 'junit:junit:4.12'

@@ -66,11 +66,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         sharedPreferences = getSharedPreferences("check", MODE_PRIVATE);
         boolean firstload = sharedPreferences.getBoolean("firstload", true);
 
-        if (!firstload) {
+/*        if (!firstload) {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();
-        }
+        }*/
 
         initView();
         username.requestFocus();

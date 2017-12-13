@@ -23,6 +23,7 @@ import com.bumptech.glide.Glide;
 import com.nanyue.app.nywj.activity.NewsDetailActivity;
 import com.nanyue.app.nywj.activity.NewsListActivity;
 import com.nanyue.app.nywj.R;
+import com.nanyue.app.nywj.activity.VideoList;
 import com.nanyue.app.nywj.adapter.NewsListAdapter;
 import com.nanyue.app.nywj.bean.BannerBean;
 import com.nanyue.app.nywj.bean.NewsListBean;
@@ -157,23 +158,23 @@ public class HomeFragment extends Fragment implements View.OnClickListener, OnRe
                 title = "我的故事";
                 break;
             case R.id.study_success:
-                tag = 5;
+                tag = 0;
                 title = "学习成才";
                 break;
             case R.id.teach_assist:
-                tag = 6;
+                tag = 0;
                 title = "教育辅导";
                 break;
             case R.id.micro_video:
-                tag = 7;
-                title = "微视频";
+                Intent intent = new Intent(getActivity(), VideoList.class);
+                startActivity(intent);
                 break;
             case R.id.micro_talk:
-                tag = 8;
+                tag = 0;
                 title = "微互动";
                 break;
             case R.id.more:
-                tag = 9;
+                tag = 0;
                 title = "更多";
                 break;
         }
@@ -234,7 +235,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, OnRe
         banner.setData(Arrays.asList(url + bannerList.get(0).getImage(),
                 url + bannerList.get(1).getImage(),
                 url + bannerList.get(2).getImage()),
-                Arrays.asList("", "", ""));
+                Arrays.asList("标题", "云南武警：淬火加钢练意志 野外拉练励精兵", ""));
         banner.setDelegate(new BGABanner.Delegate<ImageView, String>() {
             @Override
             public void onBannerItemClick(BGABanner banner, ImageView itemView, String model, int position) {

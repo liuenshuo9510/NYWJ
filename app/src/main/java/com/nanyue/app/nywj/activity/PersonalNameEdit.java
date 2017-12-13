@@ -115,7 +115,7 @@ public class PersonalNameEdit extends AppCompatActivity implements View.OnClickL
                         myHandler.sendMessage(message);
                     }
                 } catch (Exception e) {
-                    Log.e("passwordEditError", e.toString());
+                    Log.e("passwordNameError", e.toString());
                     Message message = new Message();
                     message.what = 1;
                     myHandler.sendMessage(message);

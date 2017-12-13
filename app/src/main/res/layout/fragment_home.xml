@@ -21,16 +21,17 @@
 
             <cn.bingoogolapple.bgabanner.BGABanner
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="210dp"
                 android:id="@+id/banner"
                 app:banner_pageChangeDuration="800"
                 app:banner_pointAutoPlayInterval="2000"
                 app:banner_pointAutoPlayAble="true"
                 app:banner_pointContainerLeftRightPadding="5dp"
-                app:banner_pointContainerBackground="@android:color/transparent"
+                app:banner_pointContainerBackground="#96666666"
                 app:banner_pointDrawable="@drawable/bga_banner_selector_point_hollow"
                 app:banner_pointTopBottomMargin="5dp"
-                app:banner_indicatorGravity="bottom" />
+                app:banner_tipTextSize="16sp"
+                app:banner_indicatorGravity="bottom|right" />
 
             <TableLayout
                 android:layout_width="match_parent"

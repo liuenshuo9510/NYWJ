@@ -18,9 +18,9 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activity.MainActivity"
-            android:launchMode="singleTask"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"/>
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
         <activity android:name=".activity.NewsListActivity" />
         <activity android:name=".activity.LoginActivity">
             <intent-filter>
@@ -33,7 +33,8 @@
         <activity android:name=".activity.PersonalPasswordEdit" />
         <activity android:name=".activity.PersonalNameEdit" />
         <activity android:name=".activity.PersonalFeedback" />
-        <activity android:name=".activity.PersonalSignEdit"/>
+        <activity android:name=".activity.PersonalSignEdit" />
+        <activity android:name=".activity.VideoList"></activity>
     </application>
 
 </manifest>
