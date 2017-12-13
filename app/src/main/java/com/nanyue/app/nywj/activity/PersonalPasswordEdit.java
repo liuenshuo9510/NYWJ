@@ -73,7 +73,7 @@ public class PersonalPasswordEdit extends AppCompatActivity implements View.OnCl
                 else if (oldPassString.equals("") || newPassString.equals("") || confirmPass.equals("")){
                     Toast.makeText(this, "输入不能为空", Toast.LENGTH_LONG).show();
                 }
-                else if (!Sha1.getSha1(oldPassString).equals(sharedPreferences.getString("pass", ""))) {
+                else if (!oldPassString.equals(sharedPreferences.getString("pass", ""))) {
                     Toast.makeText(this, "原密码不正确，请重新输入", Toast.LENGTH_LONG).show();
                 }
                 else if (newPassString.length() < 6 || newPassString.length() > 20) {
@@ -117,7 +117,7 @@ public class PersonalPasswordEdit extends AppCompatActivity implements View.OnCl
                     if (msg.equals("修改密码成功")) {
                         sharedPreferences = getSharedPreferences("check", MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString("pass", Sha1.getSha1(newPass));
+                        editor.putString("pass", newPass);
                         editor.apply();
 
                         Message message = new Message();
