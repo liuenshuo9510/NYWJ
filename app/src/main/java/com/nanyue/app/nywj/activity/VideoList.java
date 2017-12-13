@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -27,9 +28,10 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class VideoList extends AppCompatActivity {
+public class VideoList extends AppCompatActivity implements View.OnClickListener{
 
     private ListView listView;
+    private ImageView back;
     private CourseListAdapter courseListAdapter;
     private ArrayList<String> urls = new ArrayList<String>();
     private ArrayList<String> titles = new ArrayList<String>();
@@ -68,6 +70,16 @@ public class VideoList extends AppCompatActivity {
 
     private void initView() {
         listView = (ListView) findViewById(R.id.course_list);
+        back = (ImageView) findViewById(R.id.back);
+        back.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.back:
+                finish();
+        }
     }
 
     private void initListView() {
@@ -135,6 +147,15 @@ public class VideoList extends AppCompatActivity {
 
     @Override
     public void onPause() {
+        JZVideoPlayer.releaseAllVideos();
         super.onPause();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (JZVideoPlayer.backPress()) {
+            return;
+        }
+        super.onBackPressed();
     }
 }

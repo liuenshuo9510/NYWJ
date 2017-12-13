@@ -34,7 +34,10 @@
         <activity android:name=".activity.PersonalNameEdit" />
         <activity android:name=".activity.PersonalFeedback" />
         <activity android:name=".activity.PersonalSignEdit" />
-        <activity android:name=".activity.VideoList"></activity>
+        <activity android:name=".activity.VideoList"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait">
+        </activity>
     </application>
 
 </manifest>

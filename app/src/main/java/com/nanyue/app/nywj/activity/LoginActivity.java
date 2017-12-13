@@ -20,6 +20,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.anthonycr.grant.PermissionsManager;
 import com.anthonycr.grant.PermissionsResultAction;
 import com.nanyue.app.nywj.R;
+import com.nanyue.app.nywj.bean.LogInBean;
 import com.nanyue.app.nywj.utils.Sha1;
 
 import java.lang.ref.WeakReference;
@@ -31,12 +32,9 @@ import okhttp3.Response;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
 
-    public String error;
-
     private SharedPreferences sharedPreferences;
     private EditText username, password;
     private Button login;
-    private OkHttpClient okHttpClient;
     private MyHandler myHandler = new MyHandler(LoginActivity.this);
 
     private static class MyHandler extends Handler {
@@ -49,7 +47,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == 1) {
-                Toast.makeText(mActivity.get(), mActivity.get().error, Toast.LENGTH_LONG).show();
+                Toast.makeText(mActivity.get(), msg.obj.toString(), Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(mActivity.get(), "网络错误", Toast.LENGTH_LONG).show();
             }
@@ -61,17 +59,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        verifyStoragePermissions();
-
         sharedPreferences = getSharedPreferences("check", MODE_PRIVATE);
-        boolean firstload = sharedPreferences.getBoolean("firstload", true);
+        boolean firstLoad = sharedPreferences.getBoolean("firstload", true);
 
-/*        if (!firstload) {
+        if (!firstLoad) {
+            String name, pass, imei;
+            name = sharedPreferences.getString("name", "");
+            pass = sharedPreferences.getString("pass", "");
+            imei = sharedPreferences.getString("imei", "");
+            logIn(name, pass, imei, false);
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();
-        }*/
+        }
 
+        verifyStoragePermissions();
         initView();
         username.requestFocus();
     }
@@ -94,19 +96,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             } else {
                 String name = username.getText().toString();
                 String pass = password.getText().toString();
-                logIn(name, pass, imei);
+                logIn(name, pass, imei, true);
             }
         } catch (SecurityException e) {
             Toast.makeText(this, "获取本机识别码失败，请手动更改权限", Toast.LENGTH_LONG).show();
         }
     }
 
-    private void logIn(final String name, final String pass, final String imei) {
+    private void logIn(final String name, final String pass, final String imei, final boolean firstLoad) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    okHttpClient = new OkHttpClient();
+                    OkHttpClient okHttpClient = new OkHttpClient();
                     Request build = new Request.Builder()
                             .url("http://nouse.gzkuaiyi.com:9999/app/auth?userName="+name+"&password="+pass+"&serialNo="+imei)
                             .header("User-Agent", "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Mobile Safari/537.36")
@@ -114,41 +116,30 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     Response response = okHttpClient.newCall(build).execute();
 
                     String result = response.body().string();
-
-                    //Log.e("result", result);
-
                     Object resultObject = JSONObject.parse(result);
                     Map<String, Object> resultMap = (Map) resultObject;
 
-                    String data = resultMap.get("data").toString();
-                    Object dataObject = JSONObject.parse(data);
-                    Map<String, Object> dataMap = (Map) dataObject;
-
-                    String status = dataMap.get("status").toString();
-                    Object statusObject = JSONObject.parse(status);
-                    Map<String, Object> statusMap = (Map) statusObject;
-
-                    int i = Integer.parseInt(statusMap.get("succeed").toString());
-                    //Log.e("i", i+"");
-                    if (i == 0) {
-                        String sessionData = dataMap.get("data").toString();
-                        Object sessionDataObject = JSONObject.parse(sessionData);
-                        Map<String, Object> sessionDataMap = (Map) sessionDataObject;
-
-                        String session = sessionDataMap.get("session").toString();
-                        Object sessionObject = JSONObject.parse(session);
-                        Map<String, Object> sessionMap = (Map<String, Object>) sessionObject;
-
-                        String uid = sessionMap.get("uid").toString();
-                        Log.e("uid", uid);
-                        String sid = sessionMap.get("sid").toString();
-                        Log.e("sid", sid);
-                        succeed(uid, sid, pass);
-                    } else {
-                        error = statusMap.get("error_desc").toString();
-                        Message message = new Message();
-                        message.what = 1;
-                        myHandler.sendMessage(message);
+                    if (resultMap.get("data") != null) {
+                        String data = resultMap.get("data").toString();
+                        LogInBean logInBean = JSONObject.parseObject(data, LogInBean.class);
+                        if (logInBean.getStatus().getSucceed() == 0) {
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("uid", logInBean.getData().getSession().getUid());
+                            editor.putString("sid", logInBean.getData().getSession().getSid());
+                            editor.putString("name", name);
+                            editor.putString("pass", pass);
+                            editor.putString("imei", imei);
+                            editor.putString("nickname", logInBean.getData().getUser().getNickname());
+                            editor.apply();
+                            if (firstLoad) {
+                                succeed();
+                            }
+                        } else {
+                            Message message = new Message();
+                            message.what = 1;
+                            message.obj = logInBean.getStatus().getError_desc();
+                            myHandler.sendMessage(message);
+                        }
                     }
                 } catch (Exception e) {
                     Log.e("logInError", e.toString());
@@ -160,13 +151,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }).start();
     }
 
-    private void succeed(String uid, String sid, String pass) {
+    private void succeed() {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean("firstload", false);
-        editor.putString("uid", uid);
-        editor.putString("sid", sid);
-        String sha1 = Sha1.getSha1(pass);
-        editor.putString("pass", sha1);
         editor.apply();
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);

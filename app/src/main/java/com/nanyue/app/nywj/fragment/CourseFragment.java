@@ -93,7 +93,7 @@ public class CourseFragment extends Fragment {
                 try {
                     OkHttpClient okHttpClient = new OkHttpClient();
                     Request request = new Request.Builder()
-                            .url("http://nouse.gzkuaiyi.com:9999/app/list-7")
+                            .url("http://nouse.gzkuaiyi.com:9999/app/list-9")
                             .build();
                     Response response = okHttpClient.newCall(request).execute();
                     String res = response.body().string();
