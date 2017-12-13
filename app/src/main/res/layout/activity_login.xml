@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.percent.PercentRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.nanyue.app.nywj.activity.LoginActivity">
+
+    <ImageView
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:src="@drawable/login_bg"
+        android:scaleType="centerCrop"/>
+
+    <ImageView
+        android:id="@+id/img"
+        android:layout_centerHorizontal="true"
+        app:layout_widthPercent="50%"
+        app:layout_heightPercent="50%"
+        android:src="@drawable/login_img"/>
+
+    <TextView
+        android:id="@+id/sponsor"
+        android:layout_alignParentBottom="true"
+        android:text="主办方：武警广东省总队政治工作部"
+        android:gravity="center"
+        android:textColor="#ffffff"
+        android:textSize="14sp"
+        app:layout_heightPercent="6.5%"
+        app:layout_widthPercent="100%"/>
+
+    <Button
+        android:layout_above="@id/sponsor"
+        android:id="@+id/login"
+        android:text="登录"
+        android:textColor="#ffffff"
+        android:textSize="18sp"
+        android:background="@drawable/shape_circle_corner_green"
+        android:layout_marginBottom="30dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginLeft="40dp"
+        android:gravity="center"
+        android:layout_height="35dp"
+        app:layout_widthPercent="100%"/>
+
+    <EditText
+        android:layout_above="@+id/login"
+        android:id="@+id/password"
+        android:inputType="textPassword"
+        android:hint="密码"
+        android:textColor="#9b9b9b"
+        android:background="@drawable/shape_circle_corner_white"
+        android:layout_marginBottom="30dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginLeft="40dp"
+        android:gravity="center"
+        android:layout_height="35dp"
+        app:layout_widthPercent="100%"/>
+
+    <EditText
+        android:layout_above="@+id/password"
+        android:hint="用户名"
+        android:textColor="#9b9b9b"
+        android:id="@+id/username"
+        android:background="@drawable/shape_circle_corner_white"
+        android:layout_marginBottom="30dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginLeft="40dp"
+        android:gravity="center"
+        android:layout_height="35dp"
+        app:layout_widthPercent="100%"/>
+
+</android.support.percent.PercentRelativeLayout>

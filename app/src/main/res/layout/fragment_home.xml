@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.scwang.smartrefresh.layout.SmartRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/refreshLayout"
+    app:srlEnablePreviewInEditMode="true">
+    <com.scwang.smartrefresh.layout.header.ClassicsHeader
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView">
+        <LinearLayout
+            android:orientation="vertical" android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/backgroundColor">
+
+            <cn.bingoogolapple.bgabanner.BGABanner
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:id="@+id/banner"
+                app:banner_pageChangeDuration="800"
+                app:banner_pointAutoPlayInterval="2000"
+                app:banner_pointAutoPlayAble="true"
+                app:banner_pointContainerLeftRightPadding="5dp"
+                app:banner_pointContainerBackground="@android:color/transparent"
+                app:banner_pointDrawable="@drawable/bga_banner_selector_point_hollow"
+                app:banner_pointTopBottomMargin="5dp"
+                app:banner_indicatorGravity="bottom" />
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:background="#ffffff"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:stretchColumns="*">
+
+                <TableRow>
+                    <com.nanyue.app.nywj.view.ImageAndText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/study_ground"
+                        app:title="学习园地"
+                        app:img_src="@drawable/homefragment_study_ground"/>
+
+                    <com.nanyue.app.nywj.view.ImageAndText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/my_action"
+                        app:title="我在行动"
+                        app:img_src="@drawable/homefragment_my_action"/>
+
+                    <com.nanyue.app.nywj.view.ImageAndText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/my_story"
+                        app:title="我的故事"
+                        app:img_src="@drawable/homeframent_my_story"/>
+
+                    <com.nanyue.app.nywj.view.ImageAndText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/study_success"
+                        app:title="学习成才"
+                        app:img_src="@drawable/homefragment_teach_assist"/>
+                </TableRow>
+
+                <TableRow>
+                    <com.nanyue.app.nywj.view.ImageAndText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/teach_assist"
+                        app:title="教育辅导"
+                        app:img_src="@drawable/homefragment_study_success"/>
+
+                    <com.nanyue.app.nywj.view.ImageAndText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/micro_video"
+                        app:title="微视频"
+                        app:img_src="@drawable/homefragment_micro_video"/>
+
+                    <com.nanyue.app.nywj.view.ImageAndText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/micro_talk"
+                        app:title="微互动"
+                        app:img_src="@drawable/homefragment_micro_talk"/>
+
+                    <com.nanyue.app.nywj.view.ImageAndText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/more"
+                        app:title="更多"
+                        app:img_src="@drawable/homefragment_more"/>
+                </TableRow>
+
+            </TableLayout>
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="5dp"
+                android:background="#ffffff"
+                android:id="@+id/news_list">
+            </ListView>
+        </LinearLayout>
+    </ScrollView>
+</com.scwang.smartrefresh.layout.SmartRefreshLayout>

@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">学习</string>
+    <string name="title_activity_login">Sign in</string>
+    <string name="news_example">10月24日上午9点，中国共产党第十九次全国代表大会闭幕在人民大会堂举行</string>
+    <string name="course_list_title">广东总队认真传达学习十九大精神实录</string>
+    <string name="course_introduce">&#160;&#160;&#160;&#160;&#160;&#160;10月24日上午9点，中国共产党第十九次全国代表大会闭幕会在人民大会堂举行。习近平在大会上发表讲话，号召党员同志拿出勇气干劲，创造无愧时代的业绩</string>
+</resources>
