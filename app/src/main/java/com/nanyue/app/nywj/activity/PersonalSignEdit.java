@@ -46,12 +46,14 @@ public class PersonalSignEdit extends AppCompatActivity implements View.OnClickL
                 finish();
                 break;
             case R.id.done:
-                if (sign.getText().toString().equals("")){
+                String signString = sign.getText().toString();
+                if (signString.equals("")){
                     Toast.makeText(this, "输入不能为空", Toast.LENGTH_LONG).show();
-                } else {
-/*                    Intent intent = new Intent(this, MainActivity.class);
-                    intent.putExtra("sign", sign.getText().toString());
-                    setResult(MainActivity.RESULT_PERSONAL_SIGN, intent);*/
+                }
+                else if (signString.length() > 20) {
+                    Toast.makeText(this, "输入长度不能超过20", Toast.LENGTH_LONG).show();
+                }
+                else {
                     sharedPreferences = getSharedPreferences("personal", MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("sign", sign.getText().toString());

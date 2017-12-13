@@ -32,6 +32,23 @@ public class PersonalNameEdit extends AppCompatActivity implements View.OnClickL
     private OkHttpClient okHttpClient;
     private MyHandler myHandler = new MyHandler(this);
 
+    private static class MyHandler extends Handler {
+        private WeakReference<PersonalNameEdit> mActivity;
+
+        public MyHandler(PersonalNameEdit activity) {
+            mActivity = new WeakReference<>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == 1) {
+                Toast.makeText(mActivity.get(), "更改昵称失败", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(mActivity.get(), "更改昵称成功", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,16 +76,21 @@ public class PersonalNameEdit extends AppCompatActivity implements View.OnClickL
                 finish();
                 break;
             case R.id.done:
-                if (name.getText().toString().equals("")){
+                String nameString = name.getText().toString();
+                if (nameString.equals("")){
                     Toast.makeText(this, "输入不能为空", Toast.LENGTH_LONG).show();
-                } else {
-                    changePassword(name.getText().toString());
+                }
+                else if (nameString.length() > 8) {
+                    Toast.makeText(this, "输入长度不能超过8", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    changeName(nameString);
                 }
                 break;
         }
     }
 
-    private void changePassword(final String name) {
+    private void changeName(final String name) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -124,22 +146,6 @@ public class PersonalNameEdit extends AppCompatActivity implements View.OnClickL
         }).start();
     }
 
-    private static class MyHandler extends Handler {
-        private WeakReference<PersonalNameEdit> mActivity;
-
-        public MyHandler(PersonalNameEdit activity) {
-            mActivity = new WeakReference<>(activity);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            if (msg.what == 1) {
-                Toast.makeText(mActivity.get(), "更改昵称失败", Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(mActivity.get(), "更改昵称成功", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
 
     @Override
     protected void onDestroy() {

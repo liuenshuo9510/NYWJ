@@ -33,6 +33,23 @@ public class PersonalPasswordEdit extends AppCompatActivity implements View.OnCl
     private MyHandler myHandler = new MyHandler(this);
     private OkHttpClient okHttpClient;
 
+    private static class MyHandler extends Handler {
+        private WeakReference<PersonalPasswordEdit> mActivity;
+
+        public MyHandler(PersonalPasswordEdit activity) {
+            mActivity = new WeakReference<>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == 1) {
+                Toast.makeText(mActivity.get(), "更改密码失败", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(mActivity.get(), "更改密码成功", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -141,22 +158,6 @@ public class PersonalPasswordEdit extends AppCompatActivity implements View.OnCl
         }).start();
     }
 
-    private static class MyHandler extends Handler {
-        private WeakReference<PersonalPasswordEdit> mActivity;
-
-        public MyHandler(PersonalPasswordEdit activity) {
-            mActivity = new WeakReference<>(activity);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            if (msg.what == 1) {
-                Toast.makeText(mActivity.get(), "更改密码失败", Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(mActivity.get(), "更改密码成功", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
 
     @Override
     protected void onDestroy() {
