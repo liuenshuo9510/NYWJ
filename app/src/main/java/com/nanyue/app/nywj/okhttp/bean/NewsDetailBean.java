@@ -1,4 +1,4 @@
-package com.nanyue.app.nywj.bean;
+package com.nanyue.app.nywj.okhttp.bean;
 
 import java.text.SimpleDateFormat;
 

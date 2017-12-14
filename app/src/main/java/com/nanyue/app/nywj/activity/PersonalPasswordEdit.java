@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
 import com.nanyue.app.nywj.R;
+import com.nanyue.app.nywj.okhttp.HttpConstants;
 import com.nanyue.app.nywj.utils.Sha1;
 
 import java.lang.ref.WeakReference;
@@ -118,7 +119,7 @@ public class PersonalPasswordEdit extends AppCompatActivity implements View.OnCl
                             .add("newpassword", newPass)
                             .build();
                     Request build = new Request.Builder()
-                            .url("http://nouse.gzkuaiyi.com:9999/app/member/updatePassword")
+                            .url(HttpConstants.ROOT_URL + "/member/updatePassword")
                             .header("User-Agent", "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Mobile Safari/537.36")
                             .header("cookie", "JSESSIONID="+sid)
                             .post(body)

@@ -2,10 +2,8 @@ package com.nanyue.app.nywj.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.hardware.camera2.params.StreamConfigurationMap;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,8 +18,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.anthonycr.grant.PermissionsManager;
 import com.anthonycr.grant.PermissionsResultAction;
 import com.nanyue.app.nywj.R;
-import com.nanyue.app.nywj.bean.LogInBean;
-import com.nanyue.app.nywj.utils.Sha1;
+import com.nanyue.app.nywj.okhttp.RequestCenter;
+import com.nanyue.app.nywj.okhttp.bean.LogInBean;
+import com.nanyue.app.nywj.okhttp.exception.OkHttpException;
+import com.nanyue.app.nywj.okhttp.listener.DisposeDataListener;
 
 import java.lang.ref.WeakReference;
 import java.util.Map;
@@ -35,24 +35,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private SharedPreferences sharedPreferences;
     private EditText username, password;
     private Button login;
-    private MyHandler myHandler = new MyHandler(LoginActivity.this);
 
-    private static class MyHandler extends Handler {
-        private WeakReference<LoginActivity> mActivity;
-
-        public MyHandler(LoginActivity activity) {
-            mActivity = new WeakReference<>(activity);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            if (msg.what == 1) {
-                Toast.makeText(mActivity.get(), msg.obj.toString(), Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(mActivity.get(), "网络错误", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +43,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_login);
 
         sharedPreferences = getSharedPreferences("check", MODE_PRIVATE);
-        boolean firstLoad = sharedPreferences.getBoolean("firstload", true);
+        boolean firstLoad = sharedPreferences.getBoolean("firstLoad", true);
 
         if (!firstLoad) {
             String name, pass, imei;
@@ -103,62 +86,40 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    private void logIn(final String name, final String pass, final String imei, final boolean firstLoad) {
-        new Thread(new Runnable() {
+    private void logIn(final String name, final String pass, final String imei, final boolean first) {
+        RequestCenter.logInRequest(name, pass, imei, new DisposeDataListener() {
             @Override
-            public void run() {
-                try {
-                    OkHttpClient okHttpClient = new OkHttpClient();
-                    Request build = new Request.Builder()
-                            .url("http://nouse.gzkuaiyi.com:9999/app/auth?userName="+name+"&password="+pass+"&serialNo="+imei)
-                            .header("User-Agent", "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Mobile Safari/537.36")
-                            .build();
-                    Response response = okHttpClient.newCall(build).execute();
-
-                    String result = response.body().string();
-                    Object resultObject = JSONObject.parse(result);
-                    Map<String, Object> resultMap = (Map) resultObject;
-
-                    if (resultMap.get("data") != null) {
-                        String data = resultMap.get("data").toString();
-                        LogInBean logInBean = JSONObject.parseObject(data, LogInBean.class);
-                        if (logInBean.getStatus().getSucceed() == 0) {
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putString("uid", logInBean.getData().getSession().getUid());
-                            editor.putString("sid", logInBean.getData().getSession().getSid());
-                            editor.putString("name", name);
-                            editor.putString("pass", pass);
-                            editor.putString("imei", imei);
-                            editor.putString("nickname", logInBean.getData().getUser().getNickname());
-                            editor.apply();
-                            if (firstLoad) {
-                                succeed();
-                            }
-                        } else {
-                            Message message = new Message();
-                            message.what = 1;
-                            message.obj = logInBean.getStatus().getError_desc();
-                            myHandler.sendMessage(message);
-                        }
+            public void onSuccess(Object responseObj) {
+                LogInBean logInBean = (LogInBean) responseObj;
+                if (logInBean.getStatus().getError_code() != 0) {
+                    String error = logInBean.getStatus().getError_desc();
+                    Toast.makeText(LoginActivity.this, error, Toast.LENGTH_LONG).show();
+                } else {
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("name", name);
+                    editor.putString("pass", pass);
+                    editor.putString("imei", imei);
+                    editor.putString("uid", logInBean.getData().getSession().getUid());
+                    editor.putString("sid", logInBean.getData().getSession().getSid());
+                    editor.putBoolean("firstLoad", false);
+                    editor.apply();
+                    if (first) {
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
                     }
-                } catch (Exception e) {
-                    Log.e("logInError", e.toString());
-                    Message message = new Message();
-                    message.what = 0;
-                    myHandler.sendMessage(message);
                 }
             }
-        }).start();
+
+            @Override
+            public void onFailure(Object reasonObj) {
+                Toast.makeText(LoginActivity.this, "网络错误", Toast.LENGTH_LONG).show();
+                OkHttpException exception = (OkHttpException) reasonObj;
+                Log.e(exception.getEcode(), exception.getEmsg().toString());
+            }
+        });
     }
 
-    private void succeed() {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean("firstload", false);
-        editor.apply();
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
-    }
 
     private void verifyStoragePermissions() {
         String[] permissions = new String[]{
@@ -183,13 +144,5 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (myHandler != null) {
-            if (myHandler.hasMessages(1)) {
-                myHandler.removeMessages(1);
-            }
-            if (myHandler.hasMessages(0)) {
-                myHandler.removeMessages(0);
-            }
-        }
     }
 }

@@ -1,4 +1,4 @@
-package com.nanyue.app.nywj.bean;
+package com.nanyue.app.nywj.okhttp.bean;
 
 /**
  * Created by 87710 on 2017/12/13.

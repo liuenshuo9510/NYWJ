@@ -2,11 +2,8 @@ package com.nanyue.app.nywj.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,31 +14,24 @@ import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.bumptech.glide.Glide;
 import com.nanyue.app.nywj.activity.NewsDetailActivity;
 import com.nanyue.app.nywj.activity.NewsListActivity;
 import com.nanyue.app.nywj.R;
 import com.nanyue.app.nywj.activity.VideoList;
 import com.nanyue.app.nywj.adapter.NewsListAdapter;
-import com.nanyue.app.nywj.bean.BannerBean;
-import com.nanyue.app.nywj.bean.NewsListBean;
+import com.nanyue.app.nywj.okhttp.HttpConstants;
+import com.nanyue.app.nywj.okhttp.RequestCenter;
+import com.nanyue.app.nywj.okhttp.bean.NewsListBean;
+import com.nanyue.app.nywj.okhttp.listener.DisposeDataListener;
 import com.nanyue.app.nywj.view.ImageAndText;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 import cn.bingoogolapple.bgabanner.BGABanner;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 
 public class HomeFragment extends Fragment implements View.OnClickListener, OnRefreshListener{
@@ -52,36 +42,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, OnRe
     private ScrollView scrollView;
     private RefreshLayout refreshLayout;
     private ImageAndText studyGround, myAction, myStory, studySuccess, teachAssist, microVideo, microTalk, more;
-    private OkHttpClient okHttpClient = new OkHttpClient();
     private ArrayList<NewsListBean> arrayList = new ArrayList<>();
-    private ArrayList<BannerBean> bannerList = new ArrayList<>();
-
-    private MyHandler myHandler = new MyHandler(this);
-
-    private static class MyHandler extends Handler {
-
-        private WeakReference<HomeFragment> weakReference;
-
-        public MyHandler (HomeFragment homeFragment) {
-            weakReference = new WeakReference<HomeFragment>(homeFragment);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            HomeFragment hf = weakReference.get();
-            if (msg.what == 0) {
-                hf.newsListAdapter = new NewsListAdapter(hf.getActivity(), hf.arrayList);
-                hf.listView.setAdapter(hf.newsListAdapter);
-                hf.setListViewHeightBasedOnChildren(hf.listView);
-            }
-            else if (msg.what == 1) {
-                hf.initBanner();
-            } else {
-                Toast.makeText(hf.getActivity(), "网络错误", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
+    private ArrayList<NewsListBean> bannerList = new ArrayList<>();
 
     @Nullable
     @Override
@@ -187,39 +149,24 @@ public class HomeFragment extends Fragment implements View.OnClickListener, OnRe
     }
 
     private void getBanner() {
-        new Thread(new Runnable() {
+        RequestCenter.newsListRequest(11, new DisposeDataListener() {
             @Override
-            public void run() {
-                try {
-                    Request request = new Request.Builder()
-                            .url("http://nouse.gzkuaiyi.com:9999/app/linklist-11-3")
-                            .build();
-                    Response response = okHttpClient.newCall(request).execute();
-                    String res = response.body().string();
-                    Object resObject = JSONObject.parse(res);
-                    Map<String, Object> resMap = (Map) resObject;
-                    if (resMap.get("data") != null) {
-                        String data = resMap.get("data").toString();
-                        bannerList = (ArrayList<BannerBean>) JSONArray.parseArray(data, BannerBean.class);
-                        Message message = new Message();
-                        message.what = 1;
-                        myHandler.sendMessage(message);
-                    }
-                } catch (Exception e) {
-                    Log.e("e", e.toString());
-                    Message message = new Message();
-                    message.what = 2;
-                    myHandler.sendMessage(message);
-                }
+            public void onSuccess(Object responseObj) {
+                bannerList = (ArrayList<NewsListBean>) responseObj;
+                initBanner();
             }
-        }).start();
+
+            @Override
+            public void onFailure(Object reasonObj) {
+                Toast.makeText(getActivity(), "网络错误", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     /**
      * 初始化轮播图
      */
     private void initBanner() {
-        final String url = "http://nouse.gzkuaiyi.com:9999";
         banner.setAdapter(new BGABanner.Adapter<ImageView, String>() {
             @Override
             public void fillBannerItem(BGABanner banner, ImageView itemView, String model, int position) {
@@ -232,48 +179,37 @@ public class HomeFragment extends Fragment implements View.OnClickListener, OnRe
                         .into(itemView);
             }
         });
-        banner.setData(Arrays.asList(url + bannerList.get(0).getImage(),
-                url + bannerList.get(1).getImage(),
-                url + bannerList.get(2).getImage()),
-                Arrays.asList("标题", "云南武警：淬火加钢练意志 野外拉练励精兵", ""));
+        banner.setData(Arrays.asList(HttpConstants.ROOT + bannerList.get(0).getImage(),
+                HttpConstants.ROOT + bannerList.get(1).getImage(),
+                HttpConstants.ROOT + bannerList.get(2).getImage()),
+                Arrays.asList(bannerList.get(0).getTitle(),
+                        bannerList.get(1).getTitle(),
+                        bannerList.get(2).getTitle()));
         banner.setDelegate(new BGABanner.Delegate<ImageView, String>() {
             @Override
             public void onBannerItemClick(BGABanner banner, ImageView itemView, String model, int position) {
                 Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
-                intent.putExtra("newsId", bannerList.get(position).getThref());
+                intent.putExtra("newsId", bannerList.get(position).getId());
                 startActivity(intent);
             }
         });
     }
 
     private void getListviewData() {
-        new Thread(new Runnable() {
+        RequestCenter.homeNewsRequest(new DisposeDataListener() {
             @Override
-            public void run() {
-                try {
-                    Request request = new Request.Builder()
-                            .url("http://nouse.gzkuaiyi.com:9999/app/recommend-article?appinMenu=1")
-                            .build();
-                    Response response = okHttpClient.newCall(request).execute();
-                    String res = response.body().string();
-                    Object resObject = JSONObject.parse(res);
-                    Map<String, Object> resMap = (Map<String, Object>)resObject;
-
-                    if (resMap.get("data") != null) {
-                        String data = resMap.get("data").toString();
-                        arrayList = (ArrayList<NewsListBean>) JSONArray.parseArray(data, NewsListBean.class);
-                        Message message = new Message();
-                        message.what = 0;
-                        myHandler.sendMessage(message);
-                    }
-                } catch (Exception e) {
-                    Log.e("e", e.toString());
-                    Message message = new Message();
-                    message.what = 2;
-                    myHandler.sendMessage(message);
-                }
+            public void onSuccess(Object responseObj) {
+                arrayList = (ArrayList<NewsListBean>) responseObj;
+                newsListAdapter = new NewsListAdapter(getActivity(),arrayList);
+                listView.setAdapter(newsListAdapter);
+                setListViewHeightBasedOnChildren(listView);
             }
-        }).start();
+
+            @Override
+            public void onFailure(Object reasonObj) {
+                Toast.makeText(getActivity(), "网络错误", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     /**
@@ -317,16 +253,5 @@ public class HomeFragment extends Fragment implements View.OnClickListener, OnRe
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (myHandler != null) {
-            if (myHandler.hasMessages(1)) {
-                myHandler.removeMessages(1);
-            }
-            if (myHandler.hasMessages(0)) {
-                myHandler.removeMessages(0);
-            }
-            if (myHandler.hasMessages(2)) {
-                myHandler.removeMessages(2);
-            }
-        }
     }
 }

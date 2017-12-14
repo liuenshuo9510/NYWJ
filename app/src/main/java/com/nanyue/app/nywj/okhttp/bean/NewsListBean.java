@@ -1,4 +1,4 @@
-package com.nanyue.app.nywj.bean;
+package com.nanyue.app.nywj.okhttp.bean;
 
 import java.text.SimpleDateFormat;
 
@@ -19,6 +19,7 @@ public class NewsListBean {
     private String id;
     private String title;
     private String image;
+    private String attach;
     private int hits;
     private long publishDate;
     private int categoryId;
@@ -70,5 +71,13 @@ public class NewsListBean {
 
     public void setCategoryId(int categoryId) {
         this.categoryId = categoryId;
+    }
+
+    public String getAttach() {
+        return attach;
+    }
+
+    public void setAttach(String attach) {
+        this.attach = attach;
     }
 }

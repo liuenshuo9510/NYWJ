@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.nanyue.app.nywj.R;
+import com.nanyue.app.nywj.okhttp.HttpConstants;
 
 
 import java.lang.ref.WeakReference;
@@ -106,7 +107,7 @@ public class PersonalNameEdit extends AppCompatActivity implements View.OnClickL
                             .add("nickname", name)
                             .build();
                     Request build = new Request.Builder()
-                            .url("http://nouse.gzkuaiyi.com:9999/app/member/updateProfile")
+                            .url(HttpConstants.ROOT_URL + "/member/updateProfile")
                             .header("User-Agent", "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Mobile Safari/537.36")
                             .header("cookie", "JSESSIONID="+sid)
                             .post(body)

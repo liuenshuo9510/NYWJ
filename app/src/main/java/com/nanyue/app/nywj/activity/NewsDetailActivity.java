@@ -9,19 +9,17 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
 import com.nanyue.app.nywj.R;
-import com.nanyue.app.nywj.adapter.NewsListAdapter;
-import com.nanyue.app.nywj.bean.NewsDetailBean;
-import com.nanyue.app.nywj.fragment.HomeFragment;
+import com.nanyue.app.nywj.okhttp.RequestCenter;
+import com.nanyue.app.nywj.okhttp.bean.NewsDetailBean;
+import com.nanyue.app.nywj.okhttp.listener.DisposeDataListener;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -44,28 +42,6 @@ public class NewsDetailActivity extends AppCompatActivity implements View.OnClic
     private static String title;
     private static String author;
     private static String date;
-    private MyHandler myHandler = new MyHandler(this);
-
-    private static class MyHandler extends Handler {
-
-        private WeakReference<NewsDetailActivity> weakReference;
-
-        public MyHandler (NewsDetailActivity newsDetailActivity) {
-            weakReference = new WeakReference<NewsDetailActivity>(newsDetailActivity);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            NewsDetailActivity hf = weakReference.get();
-            if (msg.what == 0) {
-                String con = getNewContent(hf.content);
-                hf.webView.loadDataWithBaseURL(null, con, "text/html", "utf-8", null);
-            } else {
-                Toast.makeText(hf, "网络错误", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,40 +65,6 @@ public class NewsDetailActivity extends AppCompatActivity implements View.OnClic
         back.setOnClickListener(this);
     }
 
-    private void getData() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    OkHttpClient okHttpClient = new OkHttpClient();
-                    Request request = new Request.Builder()
-                            .url("http://nouse.gzkuaiyi.com:9999/app/view-" + newsId)
-                            .build();
-                    Response response = okHttpClient.newCall(request).execute();
-                    String res = response.body().string();
-                    Object resObject = JSONObject.parse(res);
-                    Map<String, Object> map = (Map) resObject;
-
-                    if (map.get("data") != null) {
-                        String data = map.get("data").toString();
-                        NewsDetailBean newsDetailBean = JSONObject.parseObject(data, NewsDetailBean.class);
-                        content = newsDetailBean.getContent();
-                        title = newsDetailBean.getTitle();
-                        author = newsDetailBean.getAuthor();
-                        date = newsDetailBean.getPublishDate();
-                        Message message = new Message();
-                        message.what = 0;
-                        myHandler.sendMessage(message);
-                    }
-                } catch (Exception e) {
-                    Message message = new Message();
-                    message.what = 1;
-                    myHandler.sendMessage(message);
-                }
-            }
-        }).start();
-    }
-
     private void initWebView() {
 
         //设置不用系统浏览器打开,直接显示在当前Webview
@@ -140,6 +82,47 @@ public class NewsDetailActivity extends AppCompatActivity implements View.OnClic
         webSettings.setBlockNetworkImage(false);
         webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);//把html中的内容放大webview等宽的一列中
     }
+
+    private void getData() {
+        RequestCenter.newsDetailRequest(newsId, new DisposeDataListener() {
+            @Override
+            public void onSuccess(Object responseObj) {
+                NewsDetailBean newsDetailBean = (NewsDetailBean) responseObj;
+                content = newsDetailBean.getContent();
+                title = newsDetailBean.getTitle();
+                author = newsDetailBean.getAuthor();
+                date = newsDetailBean.getPublishDate();
+                String con = getNewContent(content);
+                webView.loadDataWithBaseURL(null, con, "text/html", "utf-8", null);
+            }
+
+            @Override
+            public void onFailure(Object reasonObj) {
+                Toast.makeText(NewsDetailActivity.this, "网络错误", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public static String getNewContent(String htmltext){
+        try {
+            Document doc = Jsoup.parse(htmltext);
+            Elements elements = doc.getElementsByTag("img");
+            for (Element element : elements) {
+                element.attr("style","width: 100%; height: auto;");
+                element.parent().attr("style", "");
+            }
+
+            Element element = doc.body();
+            element.prepend("<font size=\"5\">" + title + "</font>" +
+                    "<p>" + date + "&nbsp;&nbsp;" + author + "</p>");
+            return doc.toString();
+        } catch (Exception e) {
+            Log.e("e", e.toString());
+            return htmltext;
+        }
+    }
+
+
 
     @Override
     public void onClick(View v) {
@@ -171,33 +154,8 @@ public class NewsDetailActivity extends AppCompatActivity implements View.OnClic
             webView.destroy();
             webView = null;
         }
-        if (myHandler != null) {
-            if (myHandler.hasMessages(1)) {
-                myHandler.removeMessages(1);
-            }
-            if (myHandler.hasMessages(0)) {
-                myHandler.removeMessages(0);
-            }
-        }
         super.onDestroy();
     }
 
-    public static String getNewContent(String htmltext){
-        try {
-            Document doc = Jsoup.parse(htmltext);
-            Elements elements = doc.getElementsByTag("img");
-            for (Element element : elements) {
-                element.attr("style","width: 100%; height: auto;");
-                element.parent().attr("style", "");
-            }
 
-            Element element = doc.body();
-            element.prepend("<font size=\"5\">" + title + "</font>" +
-                    "<p>" + date + "&nbsp;&nbsp;" + author + "</p>");
-            return doc.toString();
-        } catch (Exception e) {
-            Log.e("e", e.toString());
-            return htmltext;
-        }
-    }
 }

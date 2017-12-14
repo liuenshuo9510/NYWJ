@@ -17,7 +17,9 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.nanyue.app.nywj.R;
 import com.nanyue.app.nywj.adapter.NewsListAdapter;
-import com.nanyue.app.nywj.bean.NewsListBean;
+import com.nanyue.app.nywj.okhttp.RequestCenter;
+import com.nanyue.app.nywj.okhttp.bean.NewsListBean;
+import com.nanyue.app.nywj.okhttp.listener.DisposeDataListener;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
@@ -39,29 +41,8 @@ public class NewsListActivity extends AppCompatActivity implements View.OnClickL
     private RefreshLayout refreshLayout;
     private NewsListAdapter newsListAdapter;
     private ArrayList<NewsListBean> arrayList = new ArrayList<>();
-    private OkHttpClient okHttpClient;
     private int tag;
     private String title;
-    private MyHandler myHandler = new MyHandler(this);
-
-    private static class MyHandler extends Handler {
-        private WeakReference<NewsListActivity> mActivity;
-
-        public MyHandler(NewsListActivity activity) {
-            mActivity = new WeakReference<>(activity);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            NewsListActivity ac = mActivity.get();
-            if (msg.what == 0) {
-                ac.newsListAdapter = new NewsListAdapter(ac, ac.arrayList);
-                ac.listView.setAdapter(ac.newsListAdapter);
-            } else {
-                Toast.makeText(ac, "网络错误", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,33 +94,19 @@ public class NewsListActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void getListViewData() {
-        new Thread(new Runnable() {
+        RequestCenter.newsListRequest(tag, new DisposeDataListener() {
             @Override
-            public void run() {
-                try {
-                    okHttpClient = new OkHttpClient();
-                    Request request = new Request.Builder()
-                            .url("http://nouse.gzkuaiyi.com:9999/app/list-" + tag)
-                            .build();
-                    Response response = okHttpClient.newCall(request).execute();
-                    String res = response.body().string();
-                    Object resObject = JSONObject.parseObject(res);
-                    Map<String, Object> resMap = (Map<String, Object>) resObject;
-                    if (resMap.get("data") != null) {
-                        String data = resMap.get("data").toString();
-                        arrayList = (ArrayList<NewsListBean>) JSONArray.parseArray(data, NewsListBean.class);
-                        Message message = new Message();
-                        message.what = 0;
-                        myHandler.sendMessage(message);
-                    }
-                } catch (Exception e) {
-                    Log.e("e", e.toString());
-                    Message message = new Message();
-                    message.what = 1;
-                    myHandler.sendMessage(message);
-                }
+            public void onSuccess(Object responseObj) {
+                arrayList = (ArrayList<NewsListBean>) responseObj;
+                newsListAdapter = new NewsListAdapter(NewsListActivity.this, arrayList);
+                listView.setAdapter(newsListAdapter);
             }
-        }).start();
+
+            @Override
+            public void onFailure(Object reasonObj) {
+                Toast.makeText(NewsListActivity.this, "网络错误", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     @Override
@@ -157,13 +124,5 @@ public class NewsListActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (myHandler != null) {
-            if (myHandler.hasMessages(1)) {
-                myHandler.removeMessages(1);
-            }
-            if (myHandler.hasMessages(0)) {
-                myHandler.removeMessages(0);
-            }
-        }
     }
 }

@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.nanyue.app.nywj.R;
+import com.nanyue.app.nywj.okhttp.HttpConstants;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,12 +67,14 @@ public class CourseListAdapter extends BaseAdapter {
         }
         viewHolder.jzVideoPlayer = (JZVideoPlayerStandard) convertView.findViewById(R.id.videoplayer);
         viewHolder.jzVideoPlayer.setUp(
-                "http://nouse.gzkuaiyi.com:9999" + videoUrls.get(position),
+                HttpConstants.ROOT + videoUrls.get(position),
                 //"http://jzvd.nathen.cn/6ea7357bc3fa4658b29b7933ba575008/fbbba953374248eb913cb1408dc61d85-5287d2089db37e62345123a1be272f8b.mp4",
                 JZVideoPlayer.SCREEN_WINDOW_LIST,
                 videoTitles.get(position));
         Glide.with(convertView.getContext())
-                .load("http://nouse.gzkuaiyi.com:9999" + videoThumbs.get(position))
+                .load(HttpConstants.ROOT + videoThumbs.get(position))
+                .placeholder(R.drawable.banner1)
+                .error(R.drawable.banner1)
                 .into(viewHolder.jzVideoPlayer.thumbImageView);
         viewHolder.jzVideoPlayer.positionInList = position;
         return convertView;
