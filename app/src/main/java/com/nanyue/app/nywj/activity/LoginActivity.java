@@ -22,6 +22,7 @@ import com.nanyue.app.nywj.okhttp.RequestCenter;
 import com.nanyue.app.nywj.okhttp.bean.LogInBean;
 import com.nanyue.app.nywj.okhttp.exception.OkHttpException;
 import com.nanyue.app.nywj.okhttp.listener.DisposeDataListener;
+import com.nanyue.app.nywj.okhttp.response.CommonJsonCallback;
 
 import java.lang.ref.WeakReference;
 import java.util.Map;
@@ -54,11 +55,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();
+        } else {
+            verifyStoragePermissions();
+            initView();
+            username.requestFocus();
         }
-
-        verifyStoragePermissions();
-        initView();
-        username.requestFocus();
     }
 
     private void initView() {
@@ -113,9 +114,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             @Override
             public void onFailure(Object reasonObj) {
-                Toast.makeText(LoginActivity.this, "网络错误", Toast.LENGTH_LONG).show();
-                OkHttpException exception = (OkHttpException) reasonObj;
-                Log.e(exception.getEcode(), exception.getEmsg().toString());
+                OkHttpException okHttpException = (OkHttpException) reasonObj;
+                if (!okHttpException.getEcode().equals(CommonJsonCallback.EMPTY_ERROR)) {
+                    Toast.makeText(LoginActivity.this, "网络错误", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }

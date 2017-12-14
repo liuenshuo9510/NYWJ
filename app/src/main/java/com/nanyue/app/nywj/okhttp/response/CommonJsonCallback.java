@@ -37,9 +37,9 @@ public class CommonJsonCallback implements Callback {
     /**
      * the java layer exception, do not same to the logic error
      */
-    private final String NETWORK_ERROR = "网络错误"; // the network relative error
-    private final String JSON_ERROR = "解析失败"; // the JSON relative error
-    private final String OTHER_ERROR = "其他错误"; // the unknow error
+    public static final String NETWORK_ERROR = "网络错误"; // the network relative error
+    public static final String JSON_ERROR = "解析失败"; // the JSON relative error
+    public static final String EMPTY_ERROR = "无数据"; // the unknow error
 
     /**
      * 将其它线程的数据转发到UI线程
@@ -97,7 +97,7 @@ public class CommonJsonCallback implements Callback {
         Map<String, Object> resMap = (Map)resObject;
 
         if (resMap.get("data") == null) {
-            mListener.onFailure(new OkHttpException(NETWORK_ERROR, EMPTY_MSG));
+            mListener.onFailure(new OkHttpException(EMPTY_ERROR, EMPTY_MSG));
             return;
         }
 

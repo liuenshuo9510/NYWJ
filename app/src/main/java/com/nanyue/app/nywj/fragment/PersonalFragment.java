@@ -26,7 +26,6 @@ public class PersonalFragment extends Fragment implements View.OnClickListener{
     private RelativeLayout changePassword, nickname, briefIntroduction, problemFeedback;
     private TextView briefIntroductionView, nicknameView;
     private SharedPreferences sharedPreferences;
-    private OkHttpClient okHttpClient;
 
     @Nullable
     @Override

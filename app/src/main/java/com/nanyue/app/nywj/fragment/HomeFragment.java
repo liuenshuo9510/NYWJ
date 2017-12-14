@@ -23,7 +23,9 @@ import com.nanyue.app.nywj.adapter.NewsListAdapter;
 import com.nanyue.app.nywj.okhttp.HttpConstants;
 import com.nanyue.app.nywj.okhttp.RequestCenter;
 import com.nanyue.app.nywj.okhttp.bean.NewsListBean;
+import com.nanyue.app.nywj.okhttp.exception.OkHttpException;
 import com.nanyue.app.nywj.okhttp.listener.DisposeDataListener;
+import com.nanyue.app.nywj.okhttp.response.CommonJsonCallback;
 import com.nanyue.app.nywj.view.ImageAndText;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -207,7 +209,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener, OnRe
 
             @Override
             public void onFailure(Object reasonObj) {
-                Toast.makeText(getActivity(), "网络错误", Toast.LENGTH_LONG).show();
+                OkHttpException okHttpException = (OkHttpException) reasonObj;
+                if (!okHttpException.getEcode().equals(CommonJsonCallback.EMPTY_ERROR)) {
+                    Toast.makeText(getActivity(), "网络错误", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }

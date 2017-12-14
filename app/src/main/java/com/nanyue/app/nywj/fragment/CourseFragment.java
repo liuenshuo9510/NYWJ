@@ -11,10 +11,13 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.nanyue.app.nywj.R;
+import com.nanyue.app.nywj.activity.VideoList;
 import com.nanyue.app.nywj.adapter.CourseListAdapter;
 import com.nanyue.app.nywj.okhttp.RequestCenter;
 import com.nanyue.app.nywj.okhttp.bean.NewsListBean;
+import com.nanyue.app.nywj.okhttp.exception.OkHttpException;
 import com.nanyue.app.nywj.okhttp.listener.DisposeDataListener;
+import com.nanyue.app.nywj.okhttp.response.CommonJsonCallback;
 
 import java.util.ArrayList;
 
@@ -71,7 +74,10 @@ public class CourseFragment extends Fragment {
 
             @Override
             public void onFailure(Object reasonObj) {
-                Toast.makeText(getActivity(), "网络错误", Toast.LENGTH_LONG).show();
+                OkHttpException okHttpException = (OkHttpException) reasonObj;
+                if (!okHttpException.getEcode().equals(CommonJsonCallback.EMPTY_ERROR)) {
+                    Toast.makeText(getActivity(), "网络错误", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }

@@ -19,7 +19,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.nanyue.app.nywj.R;
 import com.nanyue.app.nywj.okhttp.RequestCenter;
 import com.nanyue.app.nywj.okhttp.bean.NewsDetailBean;
+import com.nanyue.app.nywj.okhttp.exception.OkHttpException;
 import com.nanyue.app.nywj.okhttp.listener.DisposeDataListener;
+import com.nanyue.app.nywj.okhttp.response.CommonJsonCallback;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -98,7 +100,10 @@ public class NewsDetailActivity extends AppCompatActivity implements View.OnClic
 
             @Override
             public void onFailure(Object reasonObj) {
-                Toast.makeText(NewsDetailActivity.this, "网络错误", Toast.LENGTH_LONG).show();
+                OkHttpException okHttpException = (OkHttpException) reasonObj;
+                if (!okHttpException.getEcode().equals(CommonJsonCallback.EMPTY_ERROR)) {
+                    Toast.makeText(NewsDetailActivity.this, "网络错误", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }

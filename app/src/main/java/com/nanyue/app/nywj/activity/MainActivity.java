@@ -2,11 +2,14 @@ package com.nanyue.app.nywj.activity;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.anthonycr.grant.PermissionsManager;
+import com.anthonycr.grant.PermissionsResultAction;
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.nanyue.app.nywj.R;
@@ -126,4 +129,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         }
         super.onBackPressed();
     }
+
+
 }

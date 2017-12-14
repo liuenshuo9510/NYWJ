@@ -19,7 +19,9 @@ import com.nanyue.app.nywj.R;
 import com.nanyue.app.nywj.adapter.NewsListAdapter;
 import com.nanyue.app.nywj.okhttp.RequestCenter;
 import com.nanyue.app.nywj.okhttp.bean.NewsListBean;
+import com.nanyue.app.nywj.okhttp.exception.OkHttpException;
 import com.nanyue.app.nywj.okhttp.listener.DisposeDataListener;
+import com.nanyue.app.nywj.okhttp.response.CommonJsonCallback;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
@@ -104,7 +106,10 @@ public class NewsListActivity extends AppCompatActivity implements View.OnClickL
 
             @Override
             public void onFailure(Object reasonObj) {
-                Toast.makeText(NewsListActivity.this, "网络错误", Toast.LENGTH_LONG).show();
+                OkHttpException okHttpException = (OkHttpException) reasonObj;
+                if (!okHttpException.getEcode().equals(CommonJsonCallback.EMPTY_ERROR)) {
+                    Toast.makeText(NewsListActivity.this, "网络错误", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
