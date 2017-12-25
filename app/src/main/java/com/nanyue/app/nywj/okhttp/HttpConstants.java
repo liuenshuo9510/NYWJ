@@ -7,9 +7,9 @@ package com.nanyue.app.nywj.okhttp;
  */
 public class HttpConstants {
 
-    public static String ROOT = "http://nouse.gzkuaiyi.com:9999";
+    public static String ROOT = "http://139.159.228.210:8080";
 
-    public static String ROOT_URL = "http://nouse.gzkuaiyi.com:9999/app";
+    public static String ROOT_URL = ROOT + "/app";
 
     /**
      * 新闻,视频列表

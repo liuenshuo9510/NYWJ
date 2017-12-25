@@ -68,7 +68,6 @@ public class CourseListAdapter extends BaseAdapter {
         viewHolder.jzVideoPlayer = (JZVideoPlayerStandard) convertView.findViewById(R.id.videoplayer);
         viewHolder.jzVideoPlayer.setUp(
                 HttpConstants.ROOT + videoUrls.get(position),
-                //"http://jzvd.nathen.cn/6ea7357bc3fa4658b29b7933ba575008/fbbba953374248eb913cb1408dc61d85-5287d2089db37e62345123a1be272f8b.mp4",
                 JZVideoPlayer.SCREEN_WINDOW_LIST,
                 videoTitles.get(position));
         Glide.with(convertView.getContext())
