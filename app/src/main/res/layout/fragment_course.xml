@@ -3,7 +3,7 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/backgroundColor">
-    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+<!--    <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/refreshLayout">
@@ -23,5 +23,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </com.scwang.smartrefresh.layout.footer.ClassicsFooter>
-    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>-->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="正在开发中\n\n敬请期待"
+        android:textSize="20sp"
+        android:gravity="center"/>
 </LinearLayout>

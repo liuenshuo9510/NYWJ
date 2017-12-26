@@ -35,9 +35,9 @@ public class CourseFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_course, container, false);
-        initView(view);
+/*        initView(view);
         initListView();
-        getListViewData();
+        getListViewData();*/
         return view;
     }
 
@@ -66,7 +66,9 @@ public class CourseFragment extends Fragment {
                 for (NewsListBean newsListBean : arrayList) {
                     urls.add(newsListBean.getAttach());
                     titles.add(newsListBean.getTitle());
-                    thumbs.add(newsListBean.getImage());
+                    String src = newsListBean.getImage();
+                    src = src.replace("/_thumbs", "");
+                    thumbs.add(src);
                 }
                 courseListAdapter = new CourseListAdapter(getActivity(), urls, titles, thumbs);
                 listView.setAdapter(courseListAdapter);

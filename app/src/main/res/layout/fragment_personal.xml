@@ -5,7 +5,7 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/backgroundColor">
-    <ImageView
+    <com.nanyue.app.nywj.view.CircleImageView
         android:id="@+id/personal_picture"
         app:layout_heightPercent="20%"
         app:layout_widthPercent="100%"

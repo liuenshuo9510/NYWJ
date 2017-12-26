@@ -74,7 +74,9 @@ public class VideoList extends AppCompatActivity implements View.OnClickListener
                 for (NewsListBean newsListBean : arrayList) {
                     urls.add(newsListBean.getAttach());
                     titles.add(newsListBean.getTitle());
-                    thumbs.add(newsListBean.getImage());
+                    String src = newsListBean.getImage();
+                    src = src.replace("/_thumbs", "");
+                    thumbs.add(src);
                 }
                 courseListAdapter = new CourseListAdapter(VideoList.this, urls, titles, thumbs);
                 listView.setAdapter(courseListAdapter);

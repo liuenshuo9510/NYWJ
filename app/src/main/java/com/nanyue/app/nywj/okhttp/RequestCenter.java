@@ -3,6 +3,7 @@ package com.nanyue.app.nywj.okhttp;
 import com.nanyue.app.nywj.okhttp.bean.LogInBean;
 import com.nanyue.app.nywj.okhttp.bean.NewsDetailBean;
 import com.nanyue.app.nywj.okhttp.bean.NewsListBean;
+import com.nanyue.app.nywj.okhttp.bean.PersonalInfoBean;
 import com.nanyue.app.nywj.okhttp.listener.DisposeDataHandle;
 import com.nanyue.app.nywj.okhttp.listener.DisposeDataListener;
 import com.nanyue.app.nywj.okhttp.request.CommonRequest;
@@ -15,8 +16,8 @@ public class RequestCenter {
         CommonOkHttpClient.get(CommonRequest.createGetRequest(url, params), new DisposeDataHandle(listener, clazz, isArray));
     }
 
-    public static void postRequest(String url, RequestParams params, DisposeDataListener listener, Class<?> clazz, boolean isArray) {
-        CommonOkHttpClient.get(CommonRequest.createPostRequest(url, params), new DisposeDataHandle(listener, clazz, isArray));
+    public static void postRequest(String url, String sid, RequestParams params, DisposeDataListener listener, Class<?> clazz) {
+        CommonOkHttpClient.post(CommonRequest.createPostRequest(url, sid, params), new DisposeDataHandle(listener, clazz, false));
     }
 
     public static void logInRequest(String name, String pass, String imei, DisposeDataListener disposeDataListener) {
@@ -37,6 +38,12 @@ public class RequestCenter {
 
     public static void homeNewsRequest(DisposeDataListener disposeDataListener) {
         getRequest(HttpConstants.HOME_NEWS, null, disposeDataListener, NewsListBean.class, true);
+    }
+
+    public static void personalInfoRequest(String uid, DisposeDataListener disposeDataListener) {
+        RequestParams requestParams = new RequestParams();
+        requestParams.put("uid", uid);
+        getRequest(HttpConstants.PERSONAL_INFO, requestParams, disposeDataListener, PersonalInfoBean.class, false);
     }
 
 }

@@ -36,6 +36,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private SharedPreferences sharedPreferences;
     private EditText username, password;
     private Button login;
+    private boolean firstLoad;
 
 
     @Override
@@ -44,14 +45,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_login);
 
         sharedPreferences = getSharedPreferences("check", MODE_PRIVATE);
-        boolean firstLoad = sharedPreferences.getBoolean("firstLoad", true);
+        firstLoad = sharedPreferences.getBoolean("firstLoad", true);
 
         if (!firstLoad) {
             String name, pass, imei;
             name = sharedPreferences.getString("name", "");
             pass = sharedPreferences.getString("pass", "");
             imei = sharedPreferences.getString("imei", "");
-            logIn(name, pass, imei, false);
+            logIn(name, pass, imei);
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();
@@ -80,21 +81,23 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             } else {
                 String name = username.getText().toString();
                 String pass = password.getText().toString();
-                logIn(name, pass, imei, true);
+                logIn(name, pass, imei);
             }
         } catch (SecurityException e) {
             Toast.makeText(this, "获取本机识别码失败，请手动更改权限", Toast.LENGTH_LONG).show();
         }
     }
 
-    private void logIn(final String name, final String pass, final String imei, final boolean first) {
+    private void logIn(final String name, final String pass, final String imei) {
         RequestCenter.logInRequest(name, pass, imei, new DisposeDataListener() {
             @Override
             public void onSuccess(Object responseObj) {
                 LogInBean logInBean = (LogInBean) responseObj;
                 if (logInBean.getStatus().getError_code() != 0) {
                     String error = logInBean.getStatus().getError_desc();
-                    Toast.makeText(LoginActivity.this, error, Toast.LENGTH_LONG).show();
+                    if (firstLoad) {
+                        Toast.makeText(LoginActivity.this, error, Toast.LENGTH_LONG).show();
+                    }
                 } else {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("name", name);
@@ -104,7 +107,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     editor.putString("sid", logInBean.getData().getSession().getSid());
                     editor.putBoolean("firstLoad", false);
                     editor.apply();
-                    if (first) {
+                    if (firstLoad) {
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
                         finish();

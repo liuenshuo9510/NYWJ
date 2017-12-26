@@ -1,5 +1,7 @@
 package com.nanyue.app.nywj.okhttp.request;
 
+import android.content.SharedPreferences;
+
 import java.io.File;
 import java.util.Map;
 
@@ -23,7 +25,7 @@ public class CommonRequest {
      * @param params
      * @return
      */
-    public static Request createPostRequest(String url, RequestParams params) {
+    public static Request createPostRequest(String url, String sid, RequestParams params) {
         FormBody.Builder mFormBodyBuild = new FormBody.Builder();
         if (params != null) {
             for (Map.Entry<String, String> entry : params.urlParams.entrySet()) {
@@ -35,6 +37,7 @@ public class CommonRequest {
         return new Request.Builder()
                 .url(url)
                 .post(mFormBody)
+                .header("cookie", "JSESSIONID=" + sid)
                 .header("User-Agent", "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Mobile Safari/537.36")
                 .build();
     }

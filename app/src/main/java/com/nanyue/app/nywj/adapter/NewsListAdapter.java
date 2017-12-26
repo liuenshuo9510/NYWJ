@@ -51,7 +51,6 @@ public class NewsListAdapter extends BaseAdapter {
         ImageView imageView = (ImageView) convertView.findViewById(R.id.img);
         Glide.with(context)
                 .load(HttpConstants.ROOT + arrayList.get(position).getImage())
-                .placeholder(R.drawable.banner1)
                 .error(R.drawable.banner1)
                 .into(imageView);
 

@@ -155,6 +155,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener, OnRe
             @Override
             public void onSuccess(Object responseObj) {
                 bannerList = (ArrayList<NewsListBean>) responseObj;
+                for (int i = 0; i < bannerList.size(); i++) {
+                    String src = bannerList.get(i).getImage();
+                    src = src.replace("/_thumbs", "");
+                    bannerList.get(i).setImage(src);
+                }
                 initBanner();
             }
 

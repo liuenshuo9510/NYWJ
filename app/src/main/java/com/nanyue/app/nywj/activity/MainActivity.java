@@ -130,5 +130,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         super.onBackPressed();
     }
 
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }

@@ -31,4 +31,9 @@ public class HttpConstants {
      */
     public static String HOME_NEWS = ROOT_URL + "/recommend-article?appinMenu=1";
 
+    /**
+     * 个人信息
+     */
+    public static String PERSONAL_INFO = ROOT_URL + "/userinfor";
+
 }
