@@ -58,6 +58,9 @@ public class PersonalSignEdit extends AppCompatActivity implements View.OnClickL
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("sign", sign.getText().toString());
                     editor.apply();
+                    Intent intent = new Intent();
+                    intent.putExtra("sign", sign.getText().toString());
+                    setResult(RESULT_OK, intent);
                     finish();
                 }
                 break;

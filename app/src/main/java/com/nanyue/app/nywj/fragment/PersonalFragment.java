@@ -63,6 +63,8 @@ public class PersonalFragment extends Fragment implements View.OnClickListener{
     private Uri uri;
 
     public final static int ALBUM_REQUEST_CODE = 1;
+    public final static int NAME_EDIT_REQUEST_CODE = 2;
+    public final static int SIGN_EDIT_REQUEST_CODE = 3;
 
     @Nullable
     @Override
@@ -76,15 +78,6 @@ public class PersonalFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public void onStart() {
-        sharedPreferences = getActivity().getSharedPreferences("personal", Context.MODE_PRIVATE);
-        String name = sharedPreferences.getString("name", "");
-        if (!name.equals("")) {
-            nicknameView.setText(name);
-        }
-        String sign = sharedPreferences.getString("sign", "");
-        if (!sign.equals("")) {
-            briefIntroductionView.setText(sign);
-        }
         super.onStart();
     }
 
@@ -113,19 +106,19 @@ public class PersonalFragment extends Fragment implements View.OnClickListener{
         switch (view.getId()) {
             case R.id.change_password:
                 Intent intent1 = new Intent(getActivity(), PersonalPasswordEdit.class);
-                getActivity().startActivity(intent1);
+                startActivity(intent1);
                 break;
             case R.id.nickname:
                 Intent intent2 = new Intent(getActivity(), PersonalNameEdit.class);
-                getActivity().startActivity(intent2);
+                startActivityForResult(intent2, NAME_EDIT_REQUEST_CODE);
                 break;
             case R.id.brief_introduction:
                 Intent intent3 = new Intent(getActivity(), PersonalSignEdit.class);
-                getActivity().startActivity(intent3);
+                startActivityForResult(intent3, SIGN_EDIT_REQUEST_CODE);
                 break;
             case R.id.problem_feedback:
                 Intent intent4 = new Intent(getActivity(), PersonalFeedback.class);
-                getActivity().startActivity(intent4);
+                startActivity(intent4);
                 break;
             case R.id.personal_picture:
                 if (Build.VERSION.SDK_INT  > 19) {
@@ -141,6 +134,11 @@ public class PersonalFragment extends Fragment implements View.OnClickListener{
     }
 
     public void getData() {
+        sharedPreferences = getActivity().getSharedPreferences("personal", Context.MODE_PRIVATE);
+        String sign = sharedPreferences.getString("sign", "");
+        if (!sign.equals("")) {
+            briefIntroductionView.setText(sign);
+        }
         sharedPreferences = getActivity().getSharedPreferences("check", Context.MODE_PRIVATE);
         String uid = sharedPreferences.getString("uid", "");
         RequestCenter.personalInfoRequest(uid, new DisposeDataListener() {
@@ -149,10 +147,6 @@ public class PersonalFragment extends Fragment implements View.OnClickListener{
                 PersonalInfoBean personalInfoBean = (PersonalInfoBean) responseObj;
                 String name = personalInfoBean.getUser().getNickname();
                 nicknameView.setText(name);
-                sharedPreferences = getActivity().getSharedPreferences("personal", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("name", name);
-                editor.apply();
 
                 String img = personalInfoBean.getUser().getHead();
                 Glide.with(getActivity()).load(HttpConstants.ROOT + img).fitCenter().into(circleImageView);
@@ -179,6 +173,14 @@ public class PersonalFragment extends Fragment implements View.OnClickListener{
             } catch (Exception e) {
                 Log.e("eee", e.toString());
             }
+        }
+        else if (requestCode == NAME_EDIT_REQUEST_CODE) {
+            String name = data.getStringExtra("name");
+            nicknameView.setText(name);
+        }
+        else if (requestCode == SIGN_EDIT_REQUEST_CODE) {
+            String sign = data.getStringExtra("sign");
+            briefIntroductionView.setText(sign);
         }
     }
 

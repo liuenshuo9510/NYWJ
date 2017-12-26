@@ -122,15 +122,13 @@ public class PersonalNameEdit extends AppCompatActivity implements View.OnClickL
                     String msg = resultMap.get("msg").toString();
 
                     if (msg.equals("修改个人昵称成功")) {
-                        sharedPreferences = getSharedPreferences("personal", MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString("name", name);
-                        editor.apply();
-
                         Message message = new Message();
                         message.what = 0;
                         myHandler.sendMessage(message);
 
+                        Intent intent = new Intent();
+                        intent.putExtra("name", name);
+                        setResult(RESULT_OK, intent);
                         finish();
                     } else {
                         Message message = new Message();
