@@ -53,6 +53,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import static android.R.attr.data;
+import static android.app.Activity.RESULT_OK;
 
 public class PersonalFragment extends Fragment implements View.OnClickListener{
 
@@ -162,25 +163,27 @@ public class PersonalFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PersonalFragment.ALBUM_REQUEST_CODE) {
-            try {
-                uri = data.getData();
-                File file = new File(getPath(uri));
-                sharedPreferences = getActivity().getSharedPreferences("check", Context.MODE_PRIVATE);
-                String uid = sharedPreferences.getString("uid", "");
-                String sid = sharedPreferences.getString("sid", "");
-                postPicture(file, uid, sid);
-            } catch (Exception e) {
-                Log.e("eee", e.toString());
+        if (resultCode == RESULT_OK) {
+            if (requestCode == PersonalFragment.ALBUM_REQUEST_CODE) {
+                try {
+                    uri = data.getData();
+                    File file = new File(getPath(uri));
+                    sharedPreferences = getActivity().getSharedPreferences("check", Context.MODE_PRIVATE);
+                    String uid = sharedPreferences.getString("uid", "");
+                    String sid = sharedPreferences.getString("sid", "");
+                    postPicture(file, uid, sid);
+                } catch (Exception e) {
+                    Log.e("eee", e.toString());
+                }
             }
-        }
-        else if (requestCode == NAME_EDIT_REQUEST_CODE) {
-            String name = data.getStringExtra("name");
-            nicknameView.setText(name);
-        }
-        else if (requestCode == SIGN_EDIT_REQUEST_CODE) {
-            String sign = data.getStringExtra("sign");
-            briefIntroductionView.setText(sign);
+            else if (requestCode == NAME_EDIT_REQUEST_CODE) {
+                String name = data.getStringExtra("name");
+                nicknameView.setText(name);
+            }
+            else if (requestCode == SIGN_EDIT_REQUEST_CODE) {
+                String sign = data.getStringExtra("sign");
+                briefIntroductionView.setText(sign);
+            }
         }
     }
 
