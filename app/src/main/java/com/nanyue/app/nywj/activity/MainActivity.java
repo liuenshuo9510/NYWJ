@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.anthonycr.grant.PermissionsManager;
 import com.anthonycr.grant.PermissionsResultAction;
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
     private CourseFragment courseFragment;
     private MomentFragment momentFragment;
     private PersonalFragment personalFragment;
+    private long firstBackPressedTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,7 +129,17 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         if (JZVideoPlayer.backPress()) {
             return;
         }
-        super.onBackPressed();
+        if (firstBackPressedTime == 0) {
+            firstBackPressedTime = System.currentTimeMillis();
+            Toast.makeText(this, "再按一次退出", Toast.LENGTH_SHORT).show();
+        } else {
+            if (System.currentTimeMillis() - firstBackPressedTime > 2000) {
+                firstBackPressedTime = System.currentTimeMillis();
+                Toast.makeText(this, "再按一次退出", Toast.LENGTH_SHORT).show();
+            } else {
+                super.onBackPressed();
+            }
+        }
     }
 
     @Override

@@ -33,16 +33,22 @@ import okhttp3.Response;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
 
+    public static int MAIN_ACTIVITY_REQUEST_CODE = 999;
+
     private SharedPreferences sharedPreferences;
     private EditText username, password;
     private Button login;
     private boolean firstLoad;
+    private boolean secondLogIn = false;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        initView();
+        username.requestFocus();
 
         sharedPreferences = getSharedPreferences("check", MODE_PRIVATE);
         firstLoad = sharedPreferences.getBoolean("firstLoad", true);
@@ -54,12 +60,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             imei = sharedPreferences.getString("imei", "");
             logIn(name, pass, imei);
             Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-            finish();
+            startActivityForResult(intent, MAIN_ACTIVITY_REQUEST_CODE);
         } else {
             verifyStoragePermissions();
-            initView();
-            username.requestFocus();
         }
     }
 
@@ -97,6 +100,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     String error = logInBean.getStatus().getError_desc();
                     if (firstLoad) {
                         Toast.makeText(LoginActivity.this, error, Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(LoginActivity.this, "登陆失败", Toast.LENGTH_LONG).show();
+                        finishActivity(MAIN_ACTIVITY_REQUEST_CODE);
+                        secondLogIn = true;
                     }
                 } else {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -107,11 +114,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     editor.putString("sid", logInBean.getData().getSession().getSid());
                     editor.putBoolean("firstLoad", false);
                     editor.apply();
-                    if (firstLoad) {
+                    if (firstLoad || secondLogIn) {
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
-                        finish();
                     }
+                    finish();
                 }
             }
 
@@ -119,7 +126,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             public void onFailure(Object reasonObj) {
                 OkHttpException okHttpException = (OkHttpException) reasonObj;
                 if (!okHttpException.getEcode().equals(CommonJsonCallback.EMPTY_ERROR)) {
-                    Toast.makeText(LoginActivity.this, "网络错误", Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this, "登陆失败", Toast.LENGTH_LONG).show();
+                    finishActivity(MAIN_ACTIVITY_REQUEST_CODE);
+                    secondLogIn = true;
                 }
             }
         });
