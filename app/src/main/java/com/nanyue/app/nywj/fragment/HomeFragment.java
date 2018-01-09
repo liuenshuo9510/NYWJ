@@ -1,5 +1,6 @@
 package com.nanyue.app.nywj.fragment;
 
+import android.content.ComponentCallbacks2;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -36,7 +37,7 @@ import java.util.Arrays;
 import cn.bingoogolapple.bgabanner.BGABanner;
 
 
-public class HomeFragment extends Fragment implements View.OnClickListener, OnRefreshListener{
+public class HomeFragment extends Fragment implements View.OnClickListener, OnRefreshListener, ComponentCallbacks2{
 
     private BGABanner banner;
     private ListView listView;
@@ -181,7 +182,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, OnRe
                         .load(model)
                         .placeholder(R.drawable.banner1)
                         .error(R.drawable.banner1)
-                        .centerCrop()
+                        .override(600, 350)
+                        .fitCenter()
                         .dontAnimate()
                         .into(itemView);
             }
@@ -263,5 +265,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener, OnRe
     @Override
     public void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    public void onTrimMemory(int level) {
+        if (level == TRIM_MEMORY_UI_HIDDEN) {
+            Glide.get(getActivity()).trimMemory(level);
+        }
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        Glide.get(getActivity()).clearMemory();
     }
 }

@@ -73,6 +73,7 @@ public class CourseListAdapter extends BaseAdapter {
         Glide.with(convertView.getContext())
                 .load(HttpConstants.ROOT + videoThumbs.get(position))
                 .error(R.drawable.banner1)
+                .override(600, 350)
                 .centerCrop()
                 .into(viewHolder.jzVideoPlayer.thumbImageView);
         viewHolder.jzVideoPlayer.positionInList = position;
