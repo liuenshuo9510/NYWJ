@@ -1,10 +1,13 @@
 package com.nanyue.app.nywj.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
@@ -23,6 +26,7 @@ import com.nanyue.app.nywj.okhttp.bean.LogInBean;
 import com.nanyue.app.nywj.okhttp.exception.OkHttpException;
 import com.nanyue.app.nywj.okhttp.listener.DisposeDataListener;
 import com.nanyue.app.nywj.okhttp.response.CommonJsonCallback;
+import com.nanyue.app.nywj.utils.GetImei;
 
 import java.lang.ref.WeakReference;
 import java.util.Map;
@@ -77,7 +81,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
         try {
-            String imei = ((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).getDeviceId();
+            String imei = getImei();
 
             if (username.getText().toString().equals("") || username.getText().toString().equals("")) {
                 Toast.makeText(this, "用户名或密码不能为空", Toast.LENGTH_LONG).show();
@@ -86,9 +90,34 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 String pass = password.getText().toString();
                 logIn(name, pass, imei);
             }
-        } catch (SecurityException e) {
+        } catch (Exception e) {
             Toast.makeText(this, "获取本机识别码失败，请手动更改权限", Toast.LENGTH_LONG).show();
         }
+    }
+
+
+    private String getImei() {
+        if (Build.VERSION.SDK_INT < 21) {
+            //如果获取系统的IMEI/MEID，14位代表meid 15位是imei
+            if (GetImei.getNumber(this) == 14) {
+                return GetImei.getImeiOrMeid(this);//meid
+            } else if (GetImei.getNumber(this) == 15) {
+                return GetImei.getImeiOrMeid(this);//imei1
+            }
+            // 21版本是5.0，判断是否是5.0以上的系统  5.0系统直接获取IMEI1,IMEI2,MEID
+        } else {
+            Map<String, String> map = GetImei.getImeiAndMeid(this);
+            for (String key : map.keySet()) {
+                if (map.get(key).length() == 15) {
+                    return map.get(key);
+                }
+            }
+
+//            mTvPhoneImei.setText(map.get("imei1"));//imei1
+//            mTvPhoneOtherImei.setText(map.get("imei2"));//imei2
+//            mTvPhoneMeid.setText(map.get("meid"));//meid
+        }
+        return null;
     }
 
     private void logIn(final String name, final String pass, final String imei) {

@@ -17,6 +17,7 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,8 +43,11 @@ import com.nanyue.app.nywj.utils.GetPathByUri;
 import com.nanyue.app.nywj.view.CircleImageView;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.Headers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -147,10 +151,18 @@ public class PersonalFragment extends Fragment implements View.OnClickListener{
             public void onSuccess(Object responseObj) {
                 PersonalInfoBean personalInfoBean = (PersonalInfoBean) responseObj;
                 String name = personalInfoBean.getUser().getNickname();
-                nicknameView.setText(name);
+                if (TextUtils.isEmpty(name)) {
+                    nicknameView.setText("踏雪无痕");
+                } else {
+                    nicknameView.setText(name);
+                }
 
                 String img = personalInfoBean.getUser().getHead();
-                Glide.with(getActivity()).load(HttpConstants.ROOT + img).fitCenter().into(circleImageView);
+                if (TextUtils.isEmpty(img)) {
+                    Glide.with(getActivity()).load(R.drawable.personalfragment_img).fitCenter().into(circleImageView);
+                } else {
+                    Glide.with(getActivity()).load(HttpConstants.ROOT + img).fitCenter().into(circleImageView);
+                }
             }
 
             @Override

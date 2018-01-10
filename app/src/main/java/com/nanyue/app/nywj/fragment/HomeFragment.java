@@ -180,9 +180,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener, OnRe
             public void fillBannerItem(BGABanner banner, ImageView itemView, String model, int position) {
                 Glide.with(getActivity())
                         .load(model)
-                        .placeholder(R.drawable.banner1)
-                        .error(R.drawable.banner1)
-                        .override(600, 350)
                         .fitCenter()
                         .dontAnimate()
                         .into(itemView);
