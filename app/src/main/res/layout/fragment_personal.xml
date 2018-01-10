@@ -58,7 +58,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="5dp"
-                android:src="@drawable/usercenter_goto"/>
+                android:src="@drawable/personalfragment_goto"/>
         </RelativeLayout>
 
         <View
@@ -89,7 +89,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="5dp"
-                android:src="@drawable/usercenter_goto"/>
+                android:src="@drawable/personalfragment_goto"/>
         </RelativeLayout>
 
         <View
@@ -120,7 +120,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="5dp"
-                android:src="@drawable/usercenter_goto"/>
+                android:src="@drawable/personalfragment_goto"/>
         </RelativeLayout>
 
         <View
@@ -151,7 +151,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="5dp"
-                android:src="@drawable/usercenter_goto"/>
+                android:src="@drawable/personalfragment_goto"/>
         </RelativeLayout>
 
         <View
