@@ -10,7 +10,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:background="@drawable/shape_newslist_itembg">
+        android:background="@drawable/listview_item_bg">
 
         <ImageView
             android:layout_width="110dp"
