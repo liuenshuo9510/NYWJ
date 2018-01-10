@@ -11,7 +11,7 @@
         app:layout_widthPercent="100%"
         android:layout_marginTop="40dp"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/personalfragment_img"/>
+        android:src="@drawable/personalfragment_head"/>
     <TextView
         android:id="@+id/nickname_view"
         app:layout_heightPercent="10%"
