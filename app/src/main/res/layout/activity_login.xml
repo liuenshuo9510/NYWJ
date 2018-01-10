@@ -10,7 +10,7 @@
     <ImageView
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:src="@drawable/login_bg"
+        android:src="@drawable/loginactivity_bg"
         android:scaleType="centerCrop"/>
 
     <ImageView
@@ -18,7 +18,7 @@
         android:layout_centerHorizontal="true"
         app:layout_widthPercent="50%"
         app:layout_heightPercent="50%"
-        android:src="@drawable/login_img"/>
+        android:src="@drawable/loginactivity_img"/>
 
     <TextView
         android:id="@+id/sponsor"
