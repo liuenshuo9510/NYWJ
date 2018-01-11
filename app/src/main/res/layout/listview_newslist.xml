@@ -18,7 +18,7 @@
             android:layout_marginTop="1dp"
             android:id="@+id/img"
             android:scaleType="fitXY"
-            android:src="@drawable/banner2" />
+            android:src="@drawable/banner" />
 
         <TextView
             android:id="@+id/title"

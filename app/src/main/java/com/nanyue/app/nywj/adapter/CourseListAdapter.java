@@ -1,25 +1,19 @@
 package com.nanyue.app.nywj.adapter;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.nanyue.app.nywj.R;
 import com.nanyue.app.nywj.okhttp.HttpConstants;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import cn.jzvd.JZVideoPlayer;
 import cn.jzvd.JZVideoPlayerStandard;
-import cn.jzvd.*;
 
 public class CourseListAdapter extends BaseAdapter {
 
@@ -72,7 +66,7 @@ public class CourseListAdapter extends BaseAdapter {
                 videoTitles.get(position));
         Glide.with(convertView.getContext())
                 .load(HttpConstants.ROOT + videoThumbs.get(position))
-                .error(R.drawable.banner2)
+                .error(R.drawable.banner)
                 .centerCrop()
                 .into(viewHolder.jzVideoPlayer.thumbImageView);
         viewHolder.jzVideoPlayer.positionInList = position;

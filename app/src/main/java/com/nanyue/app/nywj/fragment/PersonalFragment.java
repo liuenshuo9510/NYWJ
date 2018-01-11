@@ -128,7 +128,7 @@ public class PersonalFragment extends Fragment implements View.OnClickListener{
     }
 
     public void getData() {
-        sharedPreferences = getActivity().getSharedPreferences("personal", Context.MODE_PRIVATE);
+        sharedPreferences = getActivity().getSharedPreferences("bottombar_personal", Context.MODE_PRIVATE);
         String sign = sharedPreferences.getString("sign", "");
         if (!sign.equals("")) {
             briefIntroductionView.setText(sign);

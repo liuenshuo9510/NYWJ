@@ -2,15 +2,12 @@ package com.nanyue.app.nywj.activity;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.anthonycr.grant.PermissionsManager;
-import com.anthonycr.grant.PermissionsResultAction;
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.nanyue.app.nywj.R;
@@ -47,13 +44,13 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         BottomNavigationBar bottomNavigationBar = (BottomNavigationBar) findViewById(R.id.bottom_bar);
         bottomNavigationBar.setMode(BottomNavigationBar.MODE_FIXED)
                 .setBackgroundStyle(BottomNavigationBar.BACKGROUND_STYLE_STATIC)
-                .addItem(new BottomNavigationItem(R.drawable.bottom_bar_home, "首页")
+                .addItem(new BottomNavigationItem(R.drawable.bottombar_home, "首页")
                         .setActiveColor(Color.RED).setInActiveColorResource(R.color.fontColor))
-                .addItem(new BottomNavigationItem(R.drawable.bottom_bar_course, "微课堂")
+                .addItem(new BottomNavigationItem(R.drawable.bottombar_course, "微课堂")
                         .setActiveColor(Color.RED).setInActiveColorResource(R.color.fontColor))
-                .addItem(new BottomNavigationItem(R.drawable.bottom_bar_moment, "微互动")
+                .addItem(new BottomNavigationItem(R.drawable.bottombar_moment, "微互动")
                         .setActiveColor(Color.RED).setInActiveColorResource(R.color.fontColor))
-                .addItem(new BottomNavigationItem(R.drawable.bottom_bar_personal, "个人中心")
+                .addItem(new BottomNavigationItem(R.drawable.bottombar_personal, "个人中心")
                         .setActiveColor(Color.RED).setInActiveColorResource(R.color.fontColor))
                 .initialise();
         bottomNavigationBar.setTabSelectedListener(this);

@@ -54,7 +54,7 @@ public class PersonalSignEdit extends AppCompatActivity implements View.OnClickL
                     Toast.makeText(this, "输入长度不能超过20", Toast.LENGTH_LONG).show();
                 }
                 else {
-                    sharedPreferences = getSharedPreferences("personal", MODE_PRIVATE);
+                    sharedPreferences = getSharedPreferences("bottombar_personal", MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("sign", sign.getText().toString());
                     editor.apply();
