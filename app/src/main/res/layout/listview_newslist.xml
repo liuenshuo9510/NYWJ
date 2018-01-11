@@ -18,29 +18,32 @@
             android:layout_marginTop="1dp"
             android:id="@+id/img"
             android:scaleType="fitXY"
-            android:src="@drawable/banner1" />
+            android:src="@drawable/banner2" />
 
         <TextView
             android:id="@+id/title"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_toRightOf="@+id/img"
+            android:layout_above="@+id/date"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="5dp"
             android:layout_marginTop="5dp"
             android:text="学习十九大 奋进新时代"
-            android:maxLines="2"
+            android:maxLines="3"
             android:ellipsize="end"
             android:textColor="#000000"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:textStyle="bold" />
 
 
         <TextView
             android:id="@+id/date"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/img"
             android:text="10-24 10:20"
+            android:gravity="end"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_marginRight="8dp"
