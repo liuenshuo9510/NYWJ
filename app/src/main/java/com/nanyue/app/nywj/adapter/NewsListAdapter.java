@@ -1,6 +1,7 @@
 package com.nanyue.app.nywj.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,11 +50,16 @@ public class NewsListAdapter extends BaseAdapter {
             convertView = layoutInflater.inflate(R.layout.listview_newslist, parent, false);
         }
         ImageView imageView = (ImageView) convertView.findViewById(R.id.img);
-        Glide.with(context)
-                .load(HttpConstants.ROOT + arrayList.get(position).getImage())
-                .error(R.drawable.banner)
-                .into(imageView);
-
+        if (TextUtils.isEmpty(arrayList.get(position).getImage())) {
+            Glide.with(context)
+                    .load(R.drawable.banner)
+                    .into(imageView);
+        } else {
+            Glide.with(context)
+                    .load(HttpConstants.ROOT + arrayList.get(position).getImage())
+                    .error(R.drawable.banner)
+                    .into(imageView);
+        }
         TextView title = (TextView) convertView.findViewById(R.id.title);
         title.setText(arrayList.get(position).getTitle());
 
