@@ -6,146 +6,95 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by 87710 on 2018/1/10.
- */
-
 public class GetImei {
-    /**
-     * 获取当前手机系统版本号
-     *
-     * @return 系统版本号
-     */
-    public static String getSystemVersion() {
-        return Build.DISPLAY;
-        //return android.os.Build.VERSION.RELEASE;
 
-    }
-
-
-    /**
-     * 获取手机型号
-     *
-     * @return 手机型号
-     */
-    public static String getSystemModel() {
-        return Build.MODEL;
-    }
-
-    /**
-     * 获取手机厂商
-     *
-     * @return 手机厂商
-     */
-    public static String getDeviceBrand() {
-        return Build.BRAND;
-    }
-
-
-    /**
-     * 获取SN
-     *
-     * @return
-     */
-    public static String getSn(Context ctx) {
-        String serial = null;
-        try {
-            Class<?> c = Class.forName("android.os.SystemProperties");
-            Method get = c.getMethod("get", String.class);
-            serial = (String) get.invoke(c, "ro.serialno");
-
-        } catch (Exception ignored) {
-
+    public static String getImei(Context context) {
+        if (Build.VERSION.SDK_INT < 21) {
+            return getImeiFor4(context);
+        } else if (Build.VERSION.SDK_INT >= 21 && Build.VERSION.SDK_INT < 23) {
+            return getImeiFor5(context);
+        } else {
+            return getImeiFor6(context);
         }
-
-        return serial;
     }
 
     /**
-     * 系统4.0的时候
-     * 获取手机IMEI 或者Meid
-     *
-     * @return 手机IMEI
+     * 4.0 获取IMEI 或者Meid
      */
-    public static String getImeiOrMeid(Context ctx) {
+    private static String getImeiFor4(Context ctx) {
         TelephonyManager tm = (TelephonyManager) ctx.getSystemService(Activity.TELEPHONY_SERVICE);
         if (tm != null) {
             return tm.getDeviceId();
         }
-
-
         return null;
     }
 
-    /**
-     * 拿到imei或者meid后判断是有多少位数
-     *
-     * @param ctx
-     * @return
-     */
-    public static int getNumber(Context ctx) {
-        String imei = getImeiOrMeid(ctx);
-        return imei.length();
-    }
-
 
     /**
-     * Flyme 说 5.0 6.0统一使用这个获取IMEI IMEI2 MEID
-     * @param ctx
-     * @return
+     * 5.0 获取IMEI
      */
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    public static Map getImeiAndMeid(Context ctx) {
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private static String getImeiFor5(Context context) {
+        TelephonyManager mTelephonyManager = (TelephonyManager) context.getSystemService(Activity.TELEPHONY_SERVICE);
         Map<String, String> map = new HashMap<String, String>();
-        TelephonyManager mTelephonyManager = (TelephonyManager) ctx.getSystemService(Activity.TELEPHONY_SERVICE);
-        Class<?> clazz = null;
-        Method method = null;//(int slotId)
+        Class<?> clazz;
+        Method method;
 
         try {
             clazz = Class.forName("android.os.SystemProperties");
             method = clazz.getMethod("get", String.class, String.class);
-            String gsm = (String) method.invoke(null, "ril.gsm.imei", "");
 
+            String gsm = (String) method.invoke(null, "ril.gsm.imei", "");
             String meid = (String) method.invoke(null, "ril.cdma.meid", "");
+
             map.put("meid", meid);
             if (!TextUtils.isEmpty(gsm)) {
                 //the value of gsm like:xxxxxx,xxxxxx
                 String imeiArray[] = gsm.split(",");
-                if (imeiArray != null && imeiArray.length > 0) {
+                if (imeiArray.length > 0) {
                     map.put("imei1", imeiArray[0]);
 
                     if (imeiArray.length > 1) {
                         map.put("imei2", imeiArray[1]);
                     }
-                    else {
-//                        map.put("imei2", null);
-                        map.put("imei2", mTelephonyManager.getDeviceId(1));
-                    }
-                } else {
-                    map.put("imei1", mTelephonyManager.getDeviceId(0));
-                    map.put("imei2", mTelephonyManager.getDeviceId(1));
                 }
             } else {
-                map.put("imei1", mTelephonyManager.getDeviceId(0));
-                map.put("imei2", mTelephonyManager.getDeviceId(1));
-
+                map.put("imei1", mTelephonyManager.getDeviceId());
             }
-
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            Log.e("IMEIError", e.toString());
         }
-        return map;
+        for (String key : map.keySet()) {
+            if (map.get(key).length() == 15) {
+                return map.get(key);
+            }
+        }
+
+        //return mTelephonyManager.getDeviceId();
+        return null;
+    }
+
+    /**
+     * 6.0 获取IMEI
+     */
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private static String getImeiFor6(Context context) {
+        TelephonyManager mTelephonyManager = (TelephonyManager) context.getSystemService(Activity.TELEPHONY_SERVICE);
+        String imei1 = mTelephonyManager.getDeviceId(0);
+        String imei2 = mTelephonyManager.getDeviceId(1);
+        if (imei1.length() == 14) {
+            return imei2;
+        } else if (imei2.length() == 14){
+            return imei1;
+        } else {
+            return imei1;
+        }
     }
 }
