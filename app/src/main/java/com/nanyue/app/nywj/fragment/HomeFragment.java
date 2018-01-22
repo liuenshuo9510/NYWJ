@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -165,8 +166,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener, OnRe
             }
 
             @Override
-            public void onFailure(Object reasonObj) {
-                Toast.makeText(getActivity(), "网络错误", Toast.LENGTH_LONG).show();
+            public void onFailure(OkHttpException reasonObj) {
+                if (reasonObj.getError_message().equals(OkHttpException.NETWORK_ERROR)) {
+                    Toast.makeText(getActivity(), "网络错误", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getActivity(), "获取图片失败", Toast.LENGTH_LONG).show();
+                    Log.e(reasonObj.getError_message(), reasonObj.getError_detail());
+                }
             }
         });
     }
@@ -212,10 +218,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener, OnRe
             }
 
             @Override
-            public void onFailure(Object reasonObj) {
-                OkHttpException okHttpException = (OkHttpException) reasonObj;
-                if (!okHttpException.getEcode().equals(CommonJsonCallback.EMPTY_ERROR)) {
+            public void onFailure(OkHttpException reasonObj) {
+                if (reasonObj.getError_message().equals(OkHttpException.NETWORK_ERROR)) {
                     Toast.makeText(getActivity(), "网络错误", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getActivity(), "获取文章列表失败", Toast.LENGTH_LONG).show();
+                    Log.e(reasonObj.getError_message(), reasonObj.getError_detail());
                 }
             }
         });

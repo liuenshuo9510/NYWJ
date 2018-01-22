@@ -83,10 +83,12 @@ public class VideoList extends AppCompatActivity implements View.OnClickListener
             }
 
             @Override
-            public void onFailure(Object reasonObj) {
-                OkHttpException okHttpException = (OkHttpException) reasonObj;
-                if (!okHttpException.getEcode().equals(CommonJsonCallback.EMPTY_ERROR)) {
+            public void onFailure(OkHttpException reasonObj) {
+                if (reasonObj.getError_message().equals(OkHttpException.NETWORK_ERROR)) {
                     Toast.makeText(VideoList.this, "网络错误", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(VideoList.this, "获取视频列表失败", Toast.LENGTH_LONG).show();
+                    Log.e(reasonObj.getError_message(), reasonObj.getError_detail());
                 }
             }
         });

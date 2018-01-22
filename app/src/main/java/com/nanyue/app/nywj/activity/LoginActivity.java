@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -113,13 +114,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
 
             @Override
-            public void onFailure(Object reasonObj) {
-                OkHttpException okHttpException = (OkHttpException) reasonObj;
-                if (!okHttpException.getEcode().equals(CommonJsonCallback.EMPTY_ERROR)) {
+            public void onFailure(OkHttpException reasonObj) {
+                if (reasonObj.getError_message().equals(OkHttpException.NETWORK_ERROR)) {
+                    Toast.makeText(LoginActivity.this, "网络错误", Toast.LENGTH_LONG).show();
+                } else {
                     Toast.makeText(LoginActivity.this, "登陆失败", Toast.LENGTH_LONG).show();
-                    finishActivity(MAIN_ACTIVITY_REQUEST_CODE);
-                    secondLogIn = true;
+                    Log.e(reasonObj.getError_message(), reasonObj.getError_detail());
                 }
+                finishActivity(MAIN_ACTIVITY_REQUEST_CODE);
+                secondLogIn = true;
             }
         });
     }

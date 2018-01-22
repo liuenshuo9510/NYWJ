@@ -1,35 +1,39 @@
 package com.nanyue.app.nywj.okhttp.exception;
 
-/**********************************************************
- * @文件名称：LogicException.java
- * @文件作者：renzhiqiang
- * @创建时间：2015年8月19日 上午10:05:08
- * @文件描述：自定义异常类,返回ecode,emsg到业务层
- * @修改历史：2015年8月19日创建初始版本
- **********************************************************/
 public class OkHttpException extends Exception {
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * the server return code
-	 */
-	private String ecode;
+	public static final String NETWORK_ERROR = "网络错误"; // the network relative error
+	public static final String JSON_ERROR = "解析失败"; // the JSON relative error
+	public static final String EMPTY_ERROR = "无数据"; // the unknow error
 
-	/**
-	 * the server return error message
-	 */
-	private Object emsg;
+	private String error_message;
+	private String error_detail;
 
-	public OkHttpException(String ecode, Object emsg) {
-		this.ecode = ecode;
-		this.emsg = emsg;
+	public OkHttpException() {
+		error_message = "";
+		error_detail = "";
 	}
 
-	public String getEcode() {
-		return ecode;
+	public OkHttpException(String error_message, String error_detail) {
+		this.error_message = error_message;
+		this.error_detail = error_detail;
 	}
 
-	public Object getEmsg() {
-		return emsg;
+
+	public String getError_message() {
+		return error_message;
+	}
+
+	public String getError_detail() {
+		return error_detail;
+	}
+
+	public void setError_detail(String error_detail) {
+		this.error_detail = error_detail;
+	}
+
+	public void setError_message(String error_message) {
+		this.error_message = error_message;
 	}
 }

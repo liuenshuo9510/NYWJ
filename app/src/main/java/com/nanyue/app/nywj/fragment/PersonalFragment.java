@@ -31,6 +31,7 @@ import com.nanyue.app.nywj.activity.PersonalSignEdit;
 import com.nanyue.app.nywj.okhttp.HttpConstants;
 import com.nanyue.app.nywj.okhttp.RequestCenter;
 import com.nanyue.app.nywj.okhttp.bean.PersonalInfoBean;
+import com.nanyue.app.nywj.okhttp.exception.OkHttpException;
 import com.nanyue.app.nywj.okhttp.listener.DisposeDataListener;
 import com.nanyue.app.nywj.utils.GetPathByUri;
 import com.nanyue.app.nywj.view.CircleImageView;
@@ -128,11 +129,14 @@ public class PersonalFragment extends Fragment implements View.OnClickListener{
     }
 
     public void getData() {
+        //获取个人签名
         sharedPreferences = getActivity().getSharedPreferences("bottombar_personal", Context.MODE_PRIVATE);
         String sign = sharedPreferences.getString("sign", "");
         if (!sign.equals("")) {
             briefIntroductionView.setText(sign);
         }
+
+        //获取个人昵称和头像
         sharedPreferences = getActivity().getSharedPreferences("check", Context.MODE_PRIVATE);
         String uid = sharedPreferences.getString("uid", "");
         RequestCenter.personalInfoRequest(uid, new DisposeDataListener() {
@@ -155,8 +159,13 @@ public class PersonalFragment extends Fragment implements View.OnClickListener{
             }
 
             @Override
-            public void onFailure(Object reasonObj) {
-                Toast.makeText(getActivity(), "加载个人信息失败", Toast.LENGTH_LONG).show();
+            public void onFailure(OkHttpException reasonObj) {
+                if (reasonObj.getError_message().equals(OkHttpException.NETWORK_ERROR)) {
+                    Toast.makeText(getActivity(), "网络错误", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getActivity(), "加载个人信息失败", Toast.LENGTH_LONG).show();
+                    Log.e(reasonObj.getError_message(), reasonObj.getError_detail());
+                }
             }
         });
     }
@@ -167,8 +176,8 @@ public class PersonalFragment extends Fragment implements View.OnClickListener{
         if (resultCode == RESULT_OK) {
             if (requestCode == PersonalFragment.ALBUM_REQUEST_CODE) {
                 try {
-                    uri = data.getData();
-                    File file = new File(getPath(uri));
+                    uri = data.getData();  //获取所选图片的URI
+                    File file = new File(getPath(uri));  //传入图片URI，获取路径，获取文件
                     sharedPreferences = getActivity().getSharedPreferences("check", Context.MODE_PRIVATE);
                     String uid = sharedPreferences.getString("uid", "");
                     String sid = sharedPreferences.getString("sid", "");
@@ -188,6 +197,7 @@ public class PersonalFragment extends Fragment implements View.OnClickListener{
         }
     }
 
+    //根据图片URI获取路径
     private String getPath(Uri uri) {
         String path = "";
         if (Build.VERSION.SDK_INT  >= 19) {
@@ -204,6 +214,7 @@ public class PersonalFragment extends Fragment implements View.OnClickListener{
         return path;
     }
 
+    //上传图片
     private void postPicture(final File file, final String uid, final String sid) {
         new Thread(new Runnable() {
             @Override
@@ -227,7 +238,8 @@ public class PersonalFragment extends Fragment implements View.OnClickListener{
                         });
                     }
                 } catch (Exception e) {
-                    Log.e("eee", e.toString());
+                    Toast.makeText(getActivity(), "上传个人头像失败", Toast.LENGTH_LONG).show();
+                    Log.e("上传个人头像失败", e.toString());
                 }
             }
         }).start();
@@ -236,12 +248,12 @@ public class PersonalFragment extends Fragment implements View.OnClickListener{
     public Request getFileRequest(String url, File file, String uid, String sid){
         MultipartBody.Builder builder=  new MultipartBody.Builder().setType(MultipartBody.FORM);
         builder.addFormDataPart("uid", uid);
-        builder.addPart( Headers.of("Content-Disposition", "form-data; name=\"file\";filename=\"1.png\""), RequestBody.create(MediaType.parse("image/png"),file));
+        builder.addPart(Headers.of("Content-Disposition", "form-data; name=\"file\";filename=\"1.png\""), RequestBody.create(MediaType.parse("image/png"),file));
         RequestBody body = builder.build();
         return new Request.Builder()
                 .url(url)
                 .header("User-Agent", "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Mobile Safari/537.36")
-                .header("cookie", "JSESSIONID="+sid)
+                .header("cookie", "JSESSIONID=" + sid)
                 .post(body)
                 .build();
 

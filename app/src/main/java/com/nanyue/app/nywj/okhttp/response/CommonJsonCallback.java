@@ -35,13 +35,6 @@ public class CommonJsonCallback implements Callback {
     // set-cookie2
 
     /**
-     * the java layer exception, do not same to the logic error
-     */
-    public static final String NETWORK_ERROR = "网络错误"; // the network relative error
-    public static final String JSON_ERROR = "解析失败"; // the JSON relative error
-    public static final String EMPTY_ERROR = "无数据"; // the unknow error
-
-    /**
      * 将其它线程的数据转发到UI线程
      */
     private Handler mDeliveryHandler;
@@ -58,13 +51,10 @@ public class CommonJsonCallback implements Callback {
 
     @Override
     public void onFailure(final Call call, final IOException ioexception) {
-        /**
-         * 此时还在非UI线程，因此要转发
-         */
         mDeliveryHandler.post(new Runnable() {
             @Override
             public void run() {
-                mListener.onFailure(new OkHttpException(NETWORK_ERROR, ioexception));
+                mListener.onFailure(new OkHttpException(OkHttpException.NETWORK_ERROR, ioexception.getMessage()));
             }
         });
     }
@@ -89,7 +79,7 @@ public class CommonJsonCallback implements Callback {
 
     private void handleResponse(String responseObj) {
         if (responseObj == null || responseObj.trim().equals("")) {
-            mListener.onFailure(new OkHttpException(NETWORK_ERROR, EMPTY_MSG));
+            mListener.onFailure(new OkHttpException(OkHttpException.EMPTY_ERROR, "response为空"));
             return;
         }
 
@@ -97,7 +87,7 @@ public class CommonJsonCallback implements Callback {
         Map<String, Object> resMap = (Map)resObject;
 
         if (resMap.get("data") == null) {
-            mListener.onFailure(new OkHttpException(EMPTY_ERROR, EMPTY_MSG));
+            mListener.onFailure(new OkHttpException(OkHttpException.EMPTY_ERROR, "data为空"));
             return;
         }
 
@@ -110,7 +100,7 @@ public class CommonJsonCallback implements Callback {
             }
 
         } catch (Exception e) {
-            mListener.onFailure(new OkHttpException(JSON_ERROR, e.toString()));
+            mListener.onFailure(new OkHttpException(OkHttpException.JSON_ERROR, e.toString()));
         }
     }
 

@@ -105,10 +105,12 @@ public class NewsListActivity extends AppCompatActivity implements View.OnClickL
             }
 
             @Override
-            public void onFailure(Object reasonObj) {
-                OkHttpException okHttpException = (OkHttpException) reasonObj;
-                if (!okHttpException.getEcode().equals(CommonJsonCallback.EMPTY_ERROR)) {
+            public void onFailure(OkHttpException reasonObj) {
+                if (reasonObj.getError_message().equals(OkHttpException.NETWORK_ERROR)) {
                     Toast.makeText(NewsListActivity.this, "网络错误", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(NewsListActivity.this, "获取文章列表失败", Toast.LENGTH_LONG).show();
+                    Log.e(reasonObj.getError_message(), reasonObj.getError_detail());
                 }
             }
         });

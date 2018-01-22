@@ -115,7 +115,6 @@ public class PersonalNameEdit extends AppCompatActivity implements View.OnClickL
                     Response response = okHttpClient.newCall(build).execute();
 
                     String result = response.body().string();
-                    Log.e("result", result);
 
                     Object resultObject = com.alibaba.fastjson.JSONObject.parse(result);
                     Map<String, Object> resultMap = (Map<String, Object>) resultObject;
