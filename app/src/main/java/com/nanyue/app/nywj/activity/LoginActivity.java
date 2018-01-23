@@ -66,9 +66,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        try {
-            String imei = GetImei.getImei(this);
-
+        String imei = GetImei.getImei(this);
+        if (imei == null) {
+            Toast.makeText(this, "获取本机识别码失败，请手动更改权限", Toast.LENGTH_LONG).show();
+        } else {
             if (username.getText().toString().equals("") || username.getText().toString().equals("")) {
                 Toast.makeText(this, "用户名或密码不能为空", Toast.LENGTH_LONG).show();
             } else {
@@ -76,8 +77,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 String pass = password.getText().toString();
                 logIn(name, pass, imei);
             }
-        } catch (Exception e) {
-            Toast.makeText(this, "获取本机识别码失败，请手动更改权限", Toast.LENGTH_LONG).show();
         }
     }
 

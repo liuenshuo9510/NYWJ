@@ -15,6 +15,8 @@ import java.util.Map;
 
 public class GetImei {
 
+    private static String tempImei = "999999999999999";
+
     public static String getImei(Context context) {
         if (Build.VERSION.SDK_INT < 21) {
             return getImeiFor4(context);
@@ -30,10 +32,15 @@ public class GetImei {
      */
     private static String getImeiFor4(Context ctx) {
         TelephonyManager tm = (TelephonyManager) ctx.getSystemService(Activity.TELEPHONY_SERVICE);
-        if (tm != null) {
-            return tm.getDeviceId();
+        if (tm == null) {
+            return null;
         }
-        return null;
+        String imei = tm.getDeviceId();
+        if (imei.length() == 15) {
+            return imei;
+        } else {
+            return tempImei;
+        }
     }
 
 
@@ -43,6 +50,9 @@ public class GetImei {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private static String getImeiFor5(Context context) {
         TelephonyManager mTelephonyManager = (TelephonyManager) context.getSystemService(Activity.TELEPHONY_SERVICE);
+        if (mTelephonyManager == null) {
+            return null;
+        }
         Map<String, String> map = new HashMap<String, String>();
         Class<?> clazz;
         Method method;
@@ -78,7 +88,7 @@ public class GetImei {
         }
 
         //return mTelephonyManager.getDeviceId();
-        return null;
+        return tempImei;
     }
 
     /**
@@ -87,14 +97,27 @@ public class GetImei {
     @RequiresApi(api = Build.VERSION_CODES.M)
     private static String getImeiFor6(Context context) {
         TelephonyManager mTelephonyManager = (TelephonyManager) context.getSystemService(Activity.TELEPHONY_SERVICE);
+        if (mTelephonyManager == null) {
+            return null;
+        }
         String imei1 = mTelephonyManager.getDeviceId(0);
         String imei2 = mTelephonyManager.getDeviceId(1);
-        if (imei1.length() == 14) {
-            return imei2;
-        } else if (imei2.length() == 14){
-            return imei1;
+        if (TextUtils.isEmpty(imei1)) {
+            return null;
         } else {
-            return imei1;
+            if (imei1.length() == 15) {
+                return imei1;
+            } else {
+                if (TextUtils.isEmpty(imei2)) {
+                    return tempImei;
+                }
+                else if (imei2.length() == 15) {
+                    return imei2;
+                }
+                else {
+                    return tempImei;
+                }
+            }
         }
     }
 }
