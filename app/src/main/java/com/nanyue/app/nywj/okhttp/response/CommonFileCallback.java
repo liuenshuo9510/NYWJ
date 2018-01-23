@@ -62,7 +62,7 @@ public class CommonFileCallback implements Callback {
         mDeliveryHandler.post(new Runnable() {
             @Override
             public void run() {
-                mListener.onFailure(new OkHttpException(NETWORK_ERROR, ioexception));
+                mListener.onFailure(new OkHttpException(NETWORK_ERROR, ioexception.getMessage()));
             }
         });
     }

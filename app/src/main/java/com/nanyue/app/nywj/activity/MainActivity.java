@@ -1,24 +1,40 @@
 package com.nanyue.app.nywj.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.graphics.Color;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
+import com.nanyue.app.nywj.MyLog;
 import com.nanyue.app.nywj.R;
 import com.nanyue.app.nywj.fragment.CourseFragment;
 import com.nanyue.app.nywj.fragment.HomeFragment;
 import com.nanyue.app.nywj.fragment.MomentFragment;
 import com.nanyue.app.nywj.fragment.PersonalFragment;
+import com.nanyue.app.nywj.okhttp.CommonOkHttpClient;
+import com.nanyue.app.nywj.okhttp.HttpConstants;
+import com.nanyue.app.nywj.okhttp.RequestCenter;
+import com.nanyue.app.nywj.okhttp.bean.NewsListBean;
+import com.nanyue.app.nywj.okhttp.exception.OkHttpException;
+import com.nanyue.app.nywj.okhttp.listener.DisposeDataHandle;
+import com.nanyue.app.nywj.okhttp.listener.DisposeDataListener;
+import com.nanyue.app.nywj.okhttp.listener.DisposeDownloadListener;
+import com.nanyue.app.nywj.utils.UpdateApk;
 
 import java.util.ArrayList;
 
 import cn.jzvd.JZVideoPlayer;
+import okhttp3.Request;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationBar.OnTabSelectedListener{
 
@@ -35,6 +51,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         setContentView(R.layout.activity_main);
 
         JZVideoPlayer.SAVE_PROGRESS = false;
+
+        UpdateApk.checkUpdate(this);
 
         initBottomBar();
         onTabSelected(0);
@@ -143,4 +161,5 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
     }
+
 }

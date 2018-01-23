@@ -17,7 +17,10 @@ public class DisposeDataHandle
 		this.mListener = listener;
 	}
 
-
+	public DisposeDataHandle(DisposeDataListener listener, String filePath) {
+		this.mListener = listener;
+		this.mSource = filePath;
+	}
 
 	public DisposeDataHandle(DisposeDataListener listener, Class<?> clazz, boolean isArray) {
 		this.mListener = listener;

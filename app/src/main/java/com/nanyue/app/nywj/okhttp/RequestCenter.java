@@ -32,6 +32,10 @@ public class RequestCenter {
         getRequest(HttpConstants.NEWS_LIST + id, null, disposeDataListener, NewsListBean.class, true);
     }
 
+    public static void newAppRequest(String id, DisposeDataListener disposeDataListener) {
+        getRequest(HttpConstants.NEWS_LIST + id, null, disposeDataListener, NewsListBean.class, true);
+    }
+
     public static void newsDetailRequest(String id, DisposeDataListener disposeDataListener) {
         getRequest(HttpConstants.NEWS_DETAIL + id, null, disposeDataListener, NewsDetailBean.class, false);
     }

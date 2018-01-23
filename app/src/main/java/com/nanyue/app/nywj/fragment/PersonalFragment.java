@@ -34,6 +34,7 @@ import com.nanyue.app.nywj.okhttp.bean.PersonalInfoBean;
 import com.nanyue.app.nywj.okhttp.exception.OkHttpException;
 import com.nanyue.app.nywj.okhttp.listener.DisposeDataListener;
 import com.nanyue.app.nywj.utils.GetPathByUri;
+import com.nanyue.app.nywj.utils.UpdateApk;
 import com.nanyue.app.nywj.view.CircleImageView;
 
 import java.io.File;
@@ -51,7 +52,7 @@ import static android.app.Activity.RESULT_OK;
 
 public class PersonalFragment extends Fragment implements View.OnClickListener{
 
-    private RelativeLayout changePassword, nickname, briefIntroduction, problemFeedback;
+    private RelativeLayout changePassword, nickname, briefIntroduction, problemFeedback, update;
     private TextView briefIntroductionView, nicknameView;
     private SharedPreferences sharedPreferences;
     private CircleImageView circleImageView;
@@ -81,6 +82,7 @@ public class PersonalFragment extends Fragment implements View.OnClickListener{
         nickname = (RelativeLayout) view.findViewById(R.id.nickname);
         briefIntroduction = (RelativeLayout) view.findViewById(R.id.brief_introduction);
         problemFeedback = (RelativeLayout) view.findViewById(R.id.problem_feedback);
+        update = (RelativeLayout) view.findViewById(R.id.update);
 
         briefIntroductionView = (TextView) view.findViewById(R.id.brief_introduction_view);
         nicknameView = (TextView) view.findViewById(R.id.nickname_view);
@@ -94,6 +96,7 @@ public class PersonalFragment extends Fragment implements View.OnClickListener{
         briefIntroduction.setOnClickListener(this);
         problemFeedback.setOnClickListener(this);
         circleImageView.setOnClickListener(this);
+        update.setOnClickListener(this);
     }
 
     @Override
@@ -125,6 +128,10 @@ public class PersonalFragment extends Fragment implements View.OnClickListener{
                     intent5.setType("image/*");
                     startActivityForResult(intent5, ALBUM_REQUEST_CODE);
                 }
+                break;
+            case R.id.update:
+                UpdateApk.checkUpdate(getActivity());
+                break;
         }
     }
 

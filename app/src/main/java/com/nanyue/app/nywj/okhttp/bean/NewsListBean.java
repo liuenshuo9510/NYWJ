@@ -22,7 +22,7 @@ public class NewsListBean {
     private String attach;
     private int hits;
     private long publishDate;
-    private int categoryId;
+    private String categoryId;
 
     public String getId() {
         return id;
@@ -65,11 +65,11 @@ public class NewsListBean {
         this.publishDate = publishDate;
     }
 
-    public int getCategoryId() {
+    public String getCategoryId() {
         return categoryId;
     }
 
-    public void setCategoryId(int categoryId) {
+    public void setCategoryId(String categoryId) {
         this.categoryId = categoryId;
     }
 

@@ -7,9 +7,9 @@
     android:background="@color/backgroundColor">
     <com.nanyue.app.nywj.view.CircleImageView
         android:id="@+id/personal_picture"
-        app:layout_heightPercent="20%"
+        app:layout_heightPercent="18%"
         app:layout_widthPercent="100%"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="30dp"
         android:layout_gravity="center_horizontal"
         android:src="@drawable/personalfragment_head"/>
     <TextView
@@ -31,19 +31,18 @@
         android:layout_marginTop="0dp"
         android:text="既然选择了远方，便只顾风雨兼程!"
         android:gravity="center"
-        android:textSize="18sp"
-        />
+        android:textSize="18sp" />
 
     <android.support.percent.PercentRelativeLayout
         android:layout_alignParentBottom="true"
-        app:layout_heightPercent="40%"
+        app:layout_heightPercent="45%"
         app:layout_widthPercent="100%"
         android:background="#ffffff"
         android:orientation="vertical">
 
         <RelativeLayout
             android:id="@+id/nickname"
-            app:layout_heightPercent="24%"
+            app:layout_heightPercent="19%"
             app:layout_widthPercent="100%">
             <TextView
                 android:layout_width="wrap_content"
@@ -74,7 +73,7 @@
         <RelativeLayout
             android:id="@+id/brief_introduction"
             android:layout_below="@id/personal_page_line1"
-            app:layout_heightPercent="24%"
+            app:layout_heightPercent="19%"
             app:layout_widthPercent="100%">
             <TextView
                 android:layout_width="wrap_content"
@@ -105,7 +104,7 @@
         <RelativeLayout
             android:id="@+id/change_password"
             android:layout_below="@id/personal_page_line2"
-            app:layout_heightPercent="24%"
+            app:layout_heightPercent="19%"
             app:layout_widthPercent="100%">
             <TextView
                 android:layout_width="wrap_content"
@@ -136,7 +135,7 @@
         <RelativeLayout
             android:id="@+id/problem_feedback"
             android:layout_below="@id/personal_page_line3"
-            app:layout_heightPercent="24%"
+            app:layout_heightPercent="19%"
             app:layout_widthPercent="100%">
             <TextView
                 android:layout_width="wrap_content"
@@ -163,6 +162,20 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp">
         </View>
+
+        <RelativeLayout
+            android:id="@+id/update"
+            android:layout_below="@id/personal_page_line4"
+            app:layout_heightPercent="20%"
+            app:layout_widthPercent="100%">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="检查更新"
+                android:textSize="18sp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"/>
+        </RelativeLayout>
 
     </android.support.percent.PercentRelativeLayout>
 
