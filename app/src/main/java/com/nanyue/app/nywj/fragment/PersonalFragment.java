@@ -130,8 +130,7 @@ public class PersonalFragment extends Fragment implements View.OnClickListener{
                 }
                 break;
             case R.id.update:
-                //UpdateApk.checkUpdate(getActivity());
-                Toast.makeText(getActivity(), "当前版本是最新版", Toast.LENGTH_LONG).show();
+                UpdateApk.checkUpdate(getActivity());
                 break;
         }
     }

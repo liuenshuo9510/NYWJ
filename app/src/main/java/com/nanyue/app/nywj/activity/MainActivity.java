@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
 
         JZVideoPlayer.SAVE_PROGRESS = false;
 
-        //UpdateApk.checkUpdate(this);
+        UpdateApk.checkUpdate(this);
 
         initBottomBar();
         onTabSelected(0);
