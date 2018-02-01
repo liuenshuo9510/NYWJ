@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,12 +13,12 @@ import android.widget.Toast;
 
 import com.anthonycr.grant.PermissionsManager;
 import com.anthonycr.grant.PermissionsResultAction;
+import com.nanyue.app.nywj.utils.MyLog;
 import com.nanyue.app.nywj.R;
 import com.nanyue.app.nywj.okhttp.RequestCenter;
 import com.nanyue.app.nywj.okhttp.bean.LogInBean;
 import com.nanyue.app.nywj.okhttp.exception.OkHttpException;
 import com.nanyue.app.nywj.okhttp.listener.DisposeDataListener;
-import com.nanyue.app.nywj.okhttp.response.CommonJsonCallback;
 import com.nanyue.app.nywj.utils.GetImei;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
@@ -66,8 +66,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        String imei = GetImei.getImei(this);
-        if (imei == null) {
+        String imei = "";
+        try {
+            imei = GetImei.getImei(this);
+        } catch (Exception e) {
+            MyLog.e("login", e.toString());
+            Toast.makeText(this, "获取本机识别码失败，请手动更改权限", Toast.LENGTH_LONG).show();
+        }
+
+        if (TextUtils.isEmpty(imei)) {
             Toast.makeText(this, "获取本机识别码失败，请手动更改权限", Toast.LENGTH_LONG).show();
         } else {
             if (username.getText().toString().equals("") || username.getText().toString().equals("")) {
@@ -118,7 +125,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     Toast.makeText(LoginActivity.this, "网络错误", Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(LoginActivity.this, "登陆失败", Toast.LENGTH_LONG).show();
-                    Log.e(reasonObj.getError_message(), reasonObj.getError_detail());
+                    MyLog.e(reasonObj.getError_message(), reasonObj.getError_detail());
                 }
                 finishActivity(MAIN_ACTIVITY_REQUEST_CODE);
                 secondLogIn = true;
@@ -136,10 +143,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         };
         PermissionsManager.getInstance().requestPermissionsIfNecessaryForResult(this, permissions, new PermissionsResultAction() {
             @Override
-            public void onGranted() {}
+            public void onGranted() {
+
+            }
 
             @Override
-            public void onDenied(String permission) {}
+            public void onDenied(String permission) {
+
+            }
         });
     }
     @Override

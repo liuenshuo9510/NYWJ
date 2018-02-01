@@ -13,7 +13,6 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +33,7 @@ import com.nanyue.app.nywj.okhttp.bean.PersonalInfoBean;
 import com.nanyue.app.nywj.okhttp.exception.OkHttpException;
 import com.nanyue.app.nywj.okhttp.listener.DisposeDataListener;
 import com.nanyue.app.nywj.utils.GetPathByUri;
+import com.nanyue.app.nywj.utils.MyLog;
 import com.nanyue.app.nywj.utils.UpdateApk;
 import com.nanyue.app.nywj.view.CircleImageView;
 
@@ -130,7 +130,8 @@ public class PersonalFragment extends Fragment implements View.OnClickListener{
                 }
                 break;
             case R.id.update:
-                UpdateApk.checkUpdate(getActivity());
+                //UpdateApk.checkUpdate(getActivity());
+                Toast.makeText(getActivity(), "当前版本是最新版", Toast.LENGTH_LONG).show();
                 break;
         }
     }
@@ -171,7 +172,7 @@ public class PersonalFragment extends Fragment implements View.OnClickListener{
                     Toast.makeText(getActivity(), "网络错误", Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(getActivity(), "加载个人信息失败", Toast.LENGTH_LONG).show();
-                    Log.e(reasonObj.getError_message(), reasonObj.getError_detail());
+                    MyLog.e(reasonObj.getError_message(), reasonObj.getError_detail());
                 }
             }
         });
@@ -190,7 +191,7 @@ public class PersonalFragment extends Fragment implements View.OnClickListener{
                     String sid = sharedPreferences.getString("sid", "");
                     postPicture(file, uid, sid);
                 } catch (Exception e) {
-                    Log.e("eee", e.toString());
+                    MyLog.e("personalPictureError", e.toString());
                 }
             }
             else if (requestCode == NAME_EDIT_REQUEST_CODE) {
@@ -246,7 +247,7 @@ public class PersonalFragment extends Fragment implements View.OnClickListener{
                     }
                 } catch (Exception e) {
                     Toast.makeText(getActivity(), "上传个人头像失败", Toast.LENGTH_LONG).show();
-                    Log.e("上传个人头像失败", e.toString());
+                    MyLog.e("personalPicturePostError", e.toString());
                 }
             }
         }).start();

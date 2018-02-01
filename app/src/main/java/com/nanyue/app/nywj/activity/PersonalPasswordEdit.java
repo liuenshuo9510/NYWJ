@@ -5,7 +5,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -15,6 +14,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSONObject;
 import com.nanyue.app.nywj.R;
 import com.nanyue.app.nywj.okhttp.HttpConstants;
+import com.nanyue.app.nywj.utils.MyLog;
 import com.nanyue.app.nywj.utils.Sha1;
 
 import java.lang.ref.WeakReference;
@@ -150,7 +150,7 @@ public class PersonalPasswordEdit extends AppCompatActivity implements View.OnCl
                     }
 
                 } catch (Exception e) {
-                    Log.e("passwordEditError", e.toString());
+                    MyLog.e("passwordEditError", e.toString());
                     Message message = new Message();
                     message.what = 1;
                     myHandler.sendMessage(message);

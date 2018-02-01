@@ -5,7 +5,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +21,7 @@ import com.nanyue.app.nywj.okhttp.bean.NewsDetailBean;
 import com.nanyue.app.nywj.okhttp.exception.OkHttpException;
 import com.nanyue.app.nywj.okhttp.listener.DisposeDataListener;
 import com.nanyue.app.nywj.okhttp.response.CommonJsonCallback;
+import com.nanyue.app.nywj.utils.MyLog;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -104,7 +104,7 @@ public class NewsDetailActivity extends AppCompatActivity implements View.OnClic
                     Toast.makeText(NewsDetailActivity.this, "网络错误", Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(NewsDetailActivity.this, "获取文章详情失败", Toast.LENGTH_LONG).show();
-                    Log.e(reasonObj.getError_message(), reasonObj.getError_detail());
+                    MyLog.e(reasonObj.getError_message(), reasonObj.getError_detail());
                 }
             }
         });
@@ -124,7 +124,7 @@ public class NewsDetailActivity extends AppCompatActivity implements View.OnClic
                     "<p>" + date + "&nbsp;&nbsp;" + author + "</p>");
             return doc.toString();
         } catch (Exception e) {
-            Log.e("e", e.toString());
+            MyLog.e("HtmlError", e.toString());
             return htmltext;
         }
     }

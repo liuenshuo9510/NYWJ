@@ -5,7 +5,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -22,6 +21,7 @@ import com.nanyue.app.nywj.okhttp.bean.NewsListBean;
 import com.nanyue.app.nywj.okhttp.exception.OkHttpException;
 import com.nanyue.app.nywj.okhttp.listener.DisposeDataListener;
 import com.nanyue.app.nywj.okhttp.response.CommonJsonCallback;
+import com.nanyue.app.nywj.utils.MyLog;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
@@ -110,7 +110,7 @@ public class NewsListActivity extends AppCompatActivity implements View.OnClickL
                     Toast.makeText(NewsListActivity.this, "网络错误", Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(NewsListActivity.this, "获取文章列表失败", Toast.LENGTH_LONG).show();
-                    Log.e(reasonObj.getError_message(), reasonObj.getError_detail());
+                    MyLog.e(reasonObj.getError_message(), reasonObj.getError_detail());
                 }
             }
         });

@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -14,6 +13,7 @@ import android.widget.Toast;
 
 import com.nanyue.app.nywj.R;
 import com.nanyue.app.nywj.okhttp.HttpConstants;
+import com.nanyue.app.nywj.utils.MyLog;
 
 
 import java.lang.ref.WeakReference;
@@ -99,8 +99,6 @@ public class PersonalNameEdit extends AppCompatActivity implements View.OnClickL
                     sharedPreferences = getSharedPreferences("check", MODE_PRIVATE);
                     String uid = sharedPreferences.getString("uid", "");
                     String sid = sharedPreferences.getString("sid", "");
-                    //Log.e("uid", uid);
-                    Log.e("sid", sid);
                     okHttpClient = new OkHttpClient();
                     RequestBody body = new FormBody.Builder()
                             .add("uid", uid)
@@ -135,7 +133,7 @@ public class PersonalNameEdit extends AppCompatActivity implements View.OnClickL
                         myHandler.sendMessage(message);
                     }
                 } catch (Exception e) {
-                    Log.e("passwordNameError", e.toString());
+                    MyLog.e("nameEditError", e.toString());
                     Message message = new Message();
                     message.what = 1;
                     myHandler.sendMessage(message);

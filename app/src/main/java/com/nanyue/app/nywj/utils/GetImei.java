@@ -6,7 +6,6 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -79,7 +78,7 @@ public class GetImei {
                 map.put("imei1", mTelephonyManager.getDeviceId());
             }
         } catch (Exception e) {
-            Log.e("IMEIError", e.toString());
+            MyLog.e("IMEI5.0Error", e.toString());
         }
         for (String key : map.keySet()) {
             if (map.get(key).length() == 15) {

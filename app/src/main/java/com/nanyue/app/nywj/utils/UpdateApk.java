@@ -11,8 +11,6 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
-import com.nanyue.app.nywj.MyLog;
-import com.nanyue.app.nywj.activity.MainActivity;
 import com.nanyue.app.nywj.okhttp.CommonOkHttpClient;
 import com.nanyue.app.nywj.okhttp.HttpConstants;
 import com.nanyue.app.nywj.okhttp.RequestCenter;

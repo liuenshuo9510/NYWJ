@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +27,7 @@ import com.nanyue.app.nywj.okhttp.bean.NewsListBean;
 import com.nanyue.app.nywj.okhttp.exception.OkHttpException;
 import com.nanyue.app.nywj.okhttp.listener.DisposeDataListener;
 import com.nanyue.app.nywj.okhttp.response.CommonJsonCallback;
+import com.nanyue.app.nywj.utils.MyLog;
 import com.nanyue.app.nywj.view.ImageAndText;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -171,7 +171,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, OnRe
                     Toast.makeText(getActivity(), "网络错误", Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(getActivity(), "获取图片失败", Toast.LENGTH_LONG).show();
-                    Log.e(reasonObj.getError_message(), reasonObj.getError_detail());
+                    MyLog.e(reasonObj.getError_message(), reasonObj.getError_detail());
                 }
             }
         });
@@ -223,7 +223,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, OnRe
                     Toast.makeText(getActivity(), "网络错误", Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(getActivity(), "获取文章列表失败", Toast.LENGTH_LONG).show();
-                    Log.e(reasonObj.getError_message(), reasonObj.getError_detail());
+                    MyLog.e(reasonObj.getError_message(), reasonObj.getError_detail());
                 }
             }
         });

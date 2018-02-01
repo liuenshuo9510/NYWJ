@@ -2,7 +2,6 @@ package com.nanyue.app.nywj.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ImageView;
@@ -16,6 +15,7 @@ import com.nanyue.app.nywj.okhttp.bean.NewsListBean;
 import com.nanyue.app.nywj.okhttp.exception.OkHttpException;
 import com.nanyue.app.nywj.okhttp.listener.DisposeDataListener;
 import com.nanyue.app.nywj.okhttp.response.CommonJsonCallback;
+import com.nanyue.app.nywj.utils.MyLog;
 
 import java.util.ArrayList;
 
@@ -88,7 +88,7 @@ public class VideoList extends AppCompatActivity implements View.OnClickListener
                     Toast.makeText(VideoList.this, "网络错误", Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(VideoList.this, "获取视频列表失败", Toast.LENGTH_LONG).show();
-                    Log.e(reasonObj.getError_message(), reasonObj.getError_detail());
+                    MyLog.e(reasonObj.getError_message(), reasonObj.getError_detail());
                 }
             }
         });
